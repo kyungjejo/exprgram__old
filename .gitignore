@@ -60,6 +60,9 @@ typings/
 # next.js build output
 .next
 
+__pycache/
+static/
+
 *.mp4
 *.png
 .DS_Store
