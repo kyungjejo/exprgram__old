@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import { Container, Grid } from 'semantic-ui-react'
+import { BrowserRouter, Route } from 'react-router-dom'
 
-import Video from './components/VideoContainer/Video';
 import Title from './components/Title/Title';
-import Subtitle from './components/SubtitlteContainer/Subtitle';
+import MainView from './components/MainView';
+import Home from './components/Home';
 
 class App extends Component {
   constructor(props) {
@@ -21,20 +21,12 @@ class App extends Component {
     return (
       <div>
         <Title />
-        <div className="container center" id="main">
-          <Grid columns={2} divided>
-            <Grid.Row>
-              <Grid.Column>
-                <Video 
-                  _onPlay={this._onPlay}
-                  _onPause={this._onPause}/>
-              </Grid.Column>
-              <Grid.Column>
-                <Subtitle />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid> 
-        </div>
+        <BrowserRouter>
+          <div>
+            <Route exact path="/" component={Home} />
+            <Route path="/video/:videoId/:start/:end" component={MainView} />
+          </div>
+        </BrowserRouter>
       </div>
     );
   }
