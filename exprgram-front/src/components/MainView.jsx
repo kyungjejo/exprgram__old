@@ -144,7 +144,7 @@ class MainView extends Component {
 				userid={this.props.match.params.userid}
 				sentNumber={this.props.match.params.index}
 				next={this.state.next} />
-			<Title />
+			<Title userid={this.props.match.params.userid}/>
 			<div className="container center" id="main">
 				<Dropdown text={this.state.targetSentence ? 'Current sentence: '+this.state.targetSentence : 'Current sentence: '} 
 						className='link item dropdown-expressions' fluid size='medium'>

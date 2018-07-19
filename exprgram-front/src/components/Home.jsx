@@ -26,7 +26,7 @@ class Home extends Component {
     render() {
         return(
             <div>
-                <Title/>
+                <Title userid={this.props.match.params.userid}/>
                 <Container className="container-videoList">
                     <Header as="h3" textAlign="center">
                         Hi, {this.props.match.params.userid}
