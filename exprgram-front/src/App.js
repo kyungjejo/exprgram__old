@@ -3,7 +3,7 @@ import './App.css';
 
 import { BrowserRouter, Route } from 'react-router-dom'
 
-import Title from './components/Title/Title';
+import Forms from './components';
 import MainView from './components/MainView';
 import Home from './components/Home';
 
@@ -20,11 +20,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Title />
         <BrowserRouter>
           <div>
-            <Route exact path="/" component={Home} />
-            <Route path="/video/:videoId/:start/:end" component={MainView} />
+            <Route exact path="/" component={Forms} />
+            <Route exact path="/home/:userid" component={Home} />
+            <Route path="/video/:videoId/:start/:end/:number/:index/:userid" component={MainView} />
           </div>
         </BrowserRouter>
       </div>

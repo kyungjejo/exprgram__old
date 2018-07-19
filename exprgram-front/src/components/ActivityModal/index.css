@@ -1,0 +1,19 @@
+.form-instruction {
+    font-size: 16px;
+}
+
+.form-question {
+    font-size: 16px;
+}
+
+.bold-emphasize {
+    font-weight: bolder;
+}
+
+.list-likert {
+    margin-bottom: 10px !important;
+}
+
+.input-short-text {
+    width: 200px !important;
+}

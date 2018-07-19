@@ -1,4 +1,30 @@
 .segment-group-subtitle {
-    overflow-y: auto;
+    overflow-y: hidden;
     height: 350px;
+}
+
+.segment-sentence {
+    cursor: pointer;
+}
+
+#target {
+    background: rgba(0,88,116,0.5) !important;
+    color: white !important;
+}
+
+.header-subtitle {
+    color: #232931 !important;
+    font-weight: 500 !important;
+}
+
+#active {
+    background: rgba(252,250,112,0.4);
+    color: #575151 !important;
+    font-weight: 600;
+}
+
+#activeTarget {
+    background: rgb(0,88,116) !important;
+    color: white !important;
+    font-weight: 600;
 }

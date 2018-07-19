@@ -1,4 +1,12 @@
 .header {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    padding-top: 16px;
+    /* padding-bottom: 16px; */
+}
+
+.title-wrap {
+    background: #005874;
+}
+
+.title-text {
+    color: #feff89 !important;
 }
