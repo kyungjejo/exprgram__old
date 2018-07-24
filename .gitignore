@@ -64,7 +64,7 @@ __pycache/
 #static/
 
 *.mp4
-*.png
+#*.png
 .DS_Store
 *.pyc
 *.csv

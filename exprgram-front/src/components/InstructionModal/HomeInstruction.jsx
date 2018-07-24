@@ -33,19 +33,16 @@ class MainModal extends Component {
             <Modal 
                 open={this.props.open && this.state.open}
                 dimmer={'inverted'}>
-                <Modal.Header>Instruction - Similar Expressions</Modal.Header>
+                <Modal.Header>Instruction</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <p>Above dropdown-bar provides you the followings:</p>
-                        <p>1. The current <b>target expression</b> you are expected to learn.</p>
-                        <p>2. Other expressions that are similar to <b>target expression</b>.</p>
-                        <p>3. By clicking, you can jump to other videos.</p>
+                        <
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
                     <Checkbox label='I have read the instruction and know how to use the dropdown bar above.' 
                                 onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
-                    <Button disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
+                    <Button onClick={this.onClose}>Next</Button>
                 </Modal.Actions>
             </Modal>
         )
