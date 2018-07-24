@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Checkbox, Button } from 'semantic-ui-react';
 
-class MainModal extends Component {
+class HomeInstruction extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,23 +31,30 @@ class MainModal extends Component {
     render() {
         return(
             <Modal 
-                open={this.props.open && this.state.open}
+                open={this.state.open}
                 dimmer={'inverted'}>
                 <Modal.Header>Instruction</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <
+                        <p>In Exprgram, you will learn how expressions with similar meanings are used in various context</p>
+                        <div style={{textAlign: 'center'}}>
+                        <img 
+                            style={{maxWidth: '50%', maxHeight: '50%'}}
+                            src="https://github.com/kyungjejo/exprgram/raw/master/backend/static/homeview.png" />
+                        </div>
+                        <p>1-1. In this page, start from choosing any of the five suggested expressions.</p>
+                        <p>1-2. You can get a new list of expressions by clicking 'Click for New Suggestions' on the bottom.</p>
+                        <p>2. If you click one of the expression, you will be directed to a video watching page.</p>
+                        <p>3. You can check your progress by clicking 'Track My Progress' on the bottom.</p>
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Checkbox label='I have read the instruction and know how to use the dropdown bar above.' 
-                                onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
-                    <Button onClick={this.onClose}>Next</Button>
+                    <Button onClick={this.onClose}>Close</Button>
                 </Modal.Actions>
             </Modal>
         )
     }
 }
 
-export default MainModal;
+export default HomeInstruction;
 

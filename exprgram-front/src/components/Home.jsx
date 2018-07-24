@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Segment, Container, Header, Button, Table, Tab } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import Title from './Title/Title';
+import HomeInstruction from './InstructionModal/HomeInstruction';
 import './index.css';
 
 function VideoList(props) {
@@ -74,6 +75,7 @@ class Home extends Component {
             
         return(
             <div>
+                <HomeInstruction />
                 <Title userid={this.props.match.params.userid}/>
                 <Container className="container-videoList">
                     {/* <Header as="h3" textAlign="center">
