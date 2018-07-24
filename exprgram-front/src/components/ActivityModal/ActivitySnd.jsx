@@ -37,8 +37,8 @@ class ActivitySnd extends Component {
                 <Modal.Header>Activity #2 - Sentence Building Activity </Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <p className="form-instruction">Suggest an expression that you think can replace <b className="bold-emphasize">"{this.props.taregtExpression}"</b>.</p>
-                        <Input fluid placeholder="Submit here" onChange={(e,value) => this.setState({suggestion: value['value']})}/>
+                        <p className="form-instruction">Suggest an expression that you think can replace <b className="bold-emphasize">"{this.props.targetExpression}"</b>.</p>
+                        <Input fluid placeholder="Write the expression here." onChange={(e,value) => this.setState({suggestion: value['value']})}/>
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>

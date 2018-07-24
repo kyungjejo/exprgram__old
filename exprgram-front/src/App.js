@@ -6,6 +6,8 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import Forms from './components';
 import MainView from './components/MainView';
 import Home from './components/Home';
+import Progress from './components/Progress';
+import Instruction from './components/Instruction';
 
 class App extends Component {
   constructor(props) {
@@ -24,6 +26,8 @@ class App extends Component {
           <div>
             <Route exact path="/" component={Forms} />
             <Route exact path="/home/:userid" component={Home} />
+            <Route exact path="/progress/:userid" component={Progress} />
+            <Route exact path="/instruction/:userid" component={Instruction} />
             <Route path="/video/:videoId/:start/:end/:number/:index/:userid" component={MainView} />
           </div>
         </BrowserRouter>

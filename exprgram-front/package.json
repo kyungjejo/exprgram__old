@@ -6,6 +6,7 @@
   "dependencies": {
     "npm": "^6.1.0",
     "react": "^16.4.1",
+    "react-circular-progressbar": "^1.0.0",
     "react-dom": "^16.4.1",
     "react-modal": "^3.4.5",
     "react-router-dom": "^4.3.1",

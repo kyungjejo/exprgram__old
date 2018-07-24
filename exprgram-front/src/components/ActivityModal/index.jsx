@@ -13,11 +13,12 @@ function Activities(props) {
                 _onClose={props._onCloseModal}
                 rewatch={props.rewatch}
                 userid={props.userid}
-                sentNumber={props.sentNumber} />
+                sentNumber={props.sentNumber}
+                targetExpression={props.taregtExpression} />
             <ActivitySnd 
                 open={props._openModal[1]}
                 _onClose={props._onCloseModal}
-                taregtExpression={props.taregtExpression}
+                targetExpression={props.taregtExpression}
                 rewatch={props.rewatch} 
                 userid={props.userid}
                 sentNumber={props.sentNumber} />
@@ -27,7 +28,8 @@ function Activities(props) {
                 rewatch={props.rewatch} 
                 userid={props.userid}
                 sentNumber={props.sentNumber}
-                next={props.next} />
+                next={props.next}
+                targetExpression={props.taregtExpression} />
         </div>
     )
 }

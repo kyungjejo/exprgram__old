@@ -9,7 +9,6 @@ import Subtitle from './SubtitlteContainer/Subtitle';
 import Buttons from './Buttons/Buttons';
 import MainModal from './InstructionModal/MainModal';
 import Activities from './ActivityModal';
-import './index.css';
 
 class MainView extends Component {
 	
@@ -49,7 +48,7 @@ class MainView extends Component {
 			.then(res => res.json())
 			.then((result) =>
 				this.setState({
-					instructionModalState: parseInt(result.pk,10)===0 ? [true,false,false] : [false,false,false]
+					instructionModalState: result['userid'].length===0 ? [true,false,false] : [false,false,false]
 				})
 			)
 
@@ -62,7 +61,7 @@ class MainView extends Component {
 					targetSentences: this.props.match.params.number
 				}),
 		)
-		fetch('/fetchSimilarVideos?index='+this.props.match.params.index, {'Access-Control-Allow-Origin':'*'})
+		fetch('/fetchSimilarVideos?index='+this.props.match.params.index+'&userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) => 
 				(
@@ -81,39 +80,40 @@ class MainView extends Component {
 					)
 				)
 			)
-		
+
 		// const state = this.state.instructionModalState.slice();
 		// state[0] = true;
 		this.setState({
 			// instructionModalState: state,
-			activeSentence: this.props.match.params.number
+			activeSentence: this.props.match.params.number,
 		});
 	}
 
 	componentWillUpdate() {
 		if (this.state.videoID !== this.props.match.params.videoId) {
-			this.setState({videoID: this.props.match.params.videoId});
-			fetch('/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
-			.then(res => res.json())
-			.then((result) => 
-				this.setState({
-					subtitle: result,
-					targetSentence: result[this.props.match.params.number]['sent'],
-					targetSentences: this.props.match.params.number
-				})
-			)
-			fetch('/fetchSimilarVideos?index='+this.props.match.params.index, {'Access-Control-Allow-Origin':'*'})
-				.then(res => res.json())
-				.then((result) => this.setState({
-					similar: result
-				}))
+			window.location.reload();
+			// this.setState({videoID: this.props.match.params.videoId});
+			// fetch('/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
+			// .then(res => res.json())
+			// .then((result) => 
+			// 	this.setState({
+			// 		subtitle: result,
+			// 		targetSentence: result[this.props.match.params.number]['sent'],
+			// 		targetSentences: this.props.match.params.number
+			// 	})
+			// )
+			// fetch('/fetchSimilarVideos?index='+this.props.match.params.index, {'Access-Control-Allow-Origin':'*'})
+			// 	.then(res => res.json())
+			// 	.then((result) => this.setState({
+			// 		similar: result
+			// 	}))
 			
-			const state = this.state.instructionModalState.slice();
-			// state[0] = true;
-			this.setState({
-				instructionModalState: state,
-				activeSentence: this.props.match.params.number
-			});
+			// const state = this.state.instructionModalState.slice();
+			// // state[0] = true;
+			// this.setState({
+			// 	instructionModalState: state,
+			// 	activeSentence: this.props.match.params.number
+			// });
 		}
 	}
 
@@ -122,15 +122,15 @@ class MainView extends Component {
 			height: '390',
 			width: '640',
 			playerVars: { // https://developers.google.com/youtube/player_parameters
-			  autoplay: 0,
-			  start: parseInt(this.props.match.params.start,10),
-			  end: parseInt(this.props.match.params.end,10),
-			  controls: 1,
-			  rel: 0,
-			  modestbranding: 1,
-			  disablekb: 1,
+				autoplay: 0,
+				start: parseInt(this.props.match.params.start,10),
+				end: parseInt(this.props.match.params.end,10),
+				controls: 1,
+				rel: 0,
+				modestbranding: 1,
+				disablekb: 1,
 			}
-		};
+		}
 		return (
 		<div>
 			<MainModal
@@ -166,16 +166,16 @@ class MainView extends Component {
 				<br />
 				<Grid columns={2} divided>
 					<Grid.Row>
-						<Grid.Column>
-						<YouTube
-							videoId={this.props.match.params.videoId}
-							opts={opts}
-							onPlay={this._onPlay}
-							onPause={this._onPause}
-							onReady={this._onReady}
-							onStateChange={this._onStateChange}
-							onEnd={this._onEnd}
-						/>
+						<Grid.Column style={{margin: 'auto'}}>
+							<YouTube
+								videoId={this.props.match.params.videoId}
+								opts={opts}
+								onPlay={this._onPlay}
+								onPause={this._onPause}
+								onReady={this._onReady}
+								onStateChange={this._onStateChange}
+								onEnd={this._onEnd}
+							/>
 						</Grid.Column>
 						<Grid.Column>
 							{
@@ -192,13 +192,14 @@ class MainView extends Component {
 									_onClickSent={this._onClickSent}
 									_onCloseModal={this._onCloseInstructionModal}
 									_openModal={this.state.instructionModalState[2]}
+									onReady={this._onReady}
 									prompt={this.state.prompt}>
 								</Subtitle>
 							}
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
-				{
+				{/* {
 					!this.state.target &&
 					<Grid columns={2}>
 					<Grid.Row>
@@ -219,7 +220,7 @@ class MainView extends Component {
 						_onPause={this._onPause}
 						_onCloseModal={this._onCloseInstructionModal}
 						_openModal={this.state.instructionModalState[1]}/>
-				}
+				} */}
 				</div>
 			</div>
 		)
@@ -229,7 +230,7 @@ class MainView extends Component {
 		if (parseInt(time,10) < parseInt(this.props.match.params.start,10)){
 			this.state.target.seekTo(parseInt(this.props.match.params.start,10));
 		}
-		if (parseInt(time,10) >= parseInt(this.props.match.params.end)) {
+		if (parseInt(time,10) >= parseInt(this.props.match.params.end,10)) {
 			this._onEnd();
 		}
 		for (var i=0; i<Object.keys(this.state.subtitle).length; i++) {
@@ -307,6 +308,10 @@ class MainView extends Component {
 	}
 
 	_onReady(event) {
+		const column = document.querySelector('.ui.divided.two .row .column');
+		const iframe = document.querySelector('iframe');
+		iframe.width = parseInt(column.clientWidth*0.95,10);
+		iframe.height = parseInt(column.clientWidth/1.77,10);
 		this.setState({target:event.target})
 	}
 

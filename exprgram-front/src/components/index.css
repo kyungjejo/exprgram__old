@@ -17,6 +17,22 @@
     width: 150px;
 }
 
+.choice-button:hover {
+    background: #e0e0e0 !important;
+    color: #496388 !important;
+}
+
+.button-instruction {
+    background: #f6f6f6 !important;
+    color: #4e709d !important;
+    border: rgba(78,112,157,.5) 1px solid !important;
+}
+
+.button-instruction:hover {
+    background: #e0e0e0 !important;
+    color: #496388 !important;
+}
+
 .form-text {
     color: #232931 !important;
 }
@@ -103,4 +119,9 @@
 
 .hyperlink:hover {
     color: skyblue;
+}
+
+.row-active {
+    background: #fff1bc !important;
+    font-weight: 600;
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Header, List, Form, Radio } from 'semantic-ui-react';
+import { Modal, Button, List, Form, Radio, Header } from 'semantic-ui-react';
 import './index.css';
 
 class ActivityFst extends Component {
@@ -46,11 +46,12 @@ class ActivityFst extends Component {
                 <Modal.Header>Activity #1 - Assessment of Understanding</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                        <p className="form-instruction">Try to select the most appropriate answers for the following questions.</p>
+                        <p className="form-instruction">Target expression of the video: <b>{this.props.targetExpression}</b></p>
+                        {/* <p className="form-instruction">Try to select the most appropriate answers for the following questions.</p> */}
                         <div>
                                 <List className="list-likert"   horizontal relaxed>
                                     <p className="form-question">
-                                        1. How well did you understand the <b className="bold-emphasize">expression</b>?
+                                        1. Choose the score that best explains your understand of the <b className="bold-emphasize">expression</b>?
                                     </p>
                                     <List.Item>
                                         <List.Content>
@@ -77,7 +78,7 @@ class ActivityFst extends Component {
                                 </List>
                                 <List className="list-likert" horizontal relaxed>
                                     <p className="form-question">
-                                        2. How well do you think you understood the <b className="bold-emphasize">situation</b>?
+                                        2. Choose the score that best explains your understanding of the <b className="bold-emphasize">situation</b>?
                                     </p>
                                     <List.Item>
                                         <List.Content>

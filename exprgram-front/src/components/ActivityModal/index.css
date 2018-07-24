@@ -17,3 +17,11 @@
 .input-short-text {
     width: 200px !important;
 }
+
+.list-labels .item div .checkbox {
+    margin: auto;
+}
+
+.disabled.input {
+    background: #e6e6e6 !important;
+}

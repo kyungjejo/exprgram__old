@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Container, Form, Segment, Header, Button } from 'semantic-ui-react';
+import { Container, Form, Segment, Header } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import './index.css';
 
@@ -12,17 +12,17 @@ class Forms extends Component {
         super(props);
         this.state = { 
             id: '', email: '',
-            country: '', native: '', english: '', familiarity: '', reside: '', reason: '', check: '', 
+            country: '', native: '', english: '', familiarity: '', reside: '', reason: '',
             registerselect: false,
             errorId: false, errorEmail: false, 
-            errorCountry: false, errorNative: false, errorEnglish: false, errorFamiliarity: false, errorReside: false, errorReason: false, errorCheck: false,
+            errorCountry: false, errorNative: false, errorEnglish: false, errorFamiliarity: false, errorReside: false, errorReason: false,
             redirect: false
         }
         this.handleSubmit=this.handleSubmit.bind(this);
     }
 
     handleSubmit = () => {
-        const { id, email, registerselect, country, native, english, familiarity, reside, reason, check } = this.state;
+        const { id, email, registerselect, country, native, english, familiarity, reside, reason } = this.state;
         // this.setState({ submittedId: id, submittedCountry: country, submittedMotivation: motivation,
         //     submittedNative: native, submittedEnglish: english, submittedFamiliarity: familiarity
         // })
@@ -62,10 +62,7 @@ class Forms extends Component {
             if ( !reason ) {
                 this.setState({errorReason: true});
             }
-            if ( !check ) {
-                this.setState({errorCheck: true});
-            }
-            if ( country && native && english && familiarity && reason && reside && check )
+            if ( country && native && english && familiarity && reason && reside )
             {
                 this.setState({error:false})
                 fetch('/register', {
@@ -183,7 +180,7 @@ class Forms extends Component {
                                         error={this.state.errorFamiliarity} />
                             </label>
                         </Form.Group>
-                        <Form.Select label="Have you ever studied in English speaking country?"
+                        <Form.Select label="Have you ever studied in an English speaking country?"
                                     className="form-text"
                                     name="reside"
                                     onChange={(e, { value }) => value ? this.setState({reside: value, errorReside: false}) : null}
@@ -199,11 +196,6 @@ class Forms extends Component {
                                     options={reasonOptions}
                                     required 
                                     error={this.state.errorReason}/>
-                        <Form.Checkbox label='Please check before submitting.' 
-                                    className="form-text"
-                                    onChange={(e, { checked }) => checked ? this.setState({check: checked, errorCheck: !checked}) : null}
-                                    required 
-                                    error={this.state.errorCheck}/>
                         </div>
 
                         <div>

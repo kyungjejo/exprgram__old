@@ -251,6 +251,7 @@ export const countryOptions = [
     { key: 'French', text: 'French', value: 'French' },
     { key: 'German', text: 'German', value: 'German' },
     { key: 'Greek', text: 'Greek', value: 'Greek' },
+    { key: 'Hindin', text: 'Hindi', value: 'Hindi' },
     { key: 'Hungarian', text: 'Hungarian', value: 'Hungarian' },
     { key: 'Italian', text: 'Italian', value: 'Italian' },
     { key: 'Japanese', text: 'Japanese', value: 'Japanese' },
@@ -298,3 +299,19 @@ export const resideOptions = [
   // export const  = [
   //   { key: '', text: '', value: '' },
   // ]
+
+  export const steps = [
+    {
+      key: 'watch',
+      icon: 'youtube play',
+      title: 'Watch Video',
+      description: 'Choose your shipping options',
+    },
+    {
+      key: 'activity',
+      icon: 'edit',
+      title: 'Do activities',
+      description: 'Enter billing information',
+    },
+    { key: 'others', icon: 'info', title: 'Learn related expressions' },
+  ]
