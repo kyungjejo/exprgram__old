@@ -21,7 +21,7 @@ class MainView extends Component {
 			_interval: '',
 			targetSentence: '',
 			targetSentences: '',
-			instructionModalState: [false,false,false],
+			instructionModalState: [false,false],
 			activityModalState: [false,false,false],
 			target: '',
 			activityTrigger: false,
@@ -191,7 +191,7 @@ class MainView extends Component {
 									targetSentence={this.props.match.params.number}
 									_onClickSent={this._onClickSent}
 									_onCloseModal={this._onCloseInstructionModal}
-									_openModal={this.state.instructionModalState[2]}
+									_openModal={this.state.instructionModalState[1]}
 									onReady={this._onReady}
 									prompt={this.state.prompt}>
 								</Subtitle>
