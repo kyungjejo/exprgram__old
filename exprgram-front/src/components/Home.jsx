@@ -27,6 +27,14 @@ function VideoList(props) {
     )
 }
 
+function ContextTab(props) {
+    return (
+        <Segment>
+            Sorry, currently not available.
+        </Segment>
+    )
+}
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -58,21 +66,21 @@ class Home extends Component {
         }
         
         const panes = [
-            { menuItem: 'Expressions', render: () => <Tab.Pane><VideoList videoList={this.state.videoList} userid={this.props.match.params.userid} /></Tab.Pane>},
-            { menuItem: 'Relationship'},
-            { menuItem: 'Location'},
-            { menuItem: 'Emotion'}
+            { menuItem: 'By Expressions', render: () => <Tab.Pane><VideoList videoList={this.state.videoList} userid={this.props.match.params.userid} /></Tab.Pane>},
+            { menuItem: 'By Relationship', render: () => <Tab.Pane><ContextTab /></Tab.Pane>},
+            { menuItem: 'By Location', render: () => <Tab.Pane><ContextTab /></Tab.Pane>},
+            { menuItem: 'By Emotion', render: () => <Tab.Pane><ContextTab /></Tab.Pane>}
         ]
             
         return(
             <div>
                 <Title userid={this.props.match.params.userid}/>
                 <Container className="container-videoList">
-                    <Header as="h3" textAlign="center">
+                    {/* <Header as="h3" textAlign="center">
                         <Button className="button-instruction" style={{width: 'auto'}} onClick={() =>this.setState({instruction: true})}>
                             Instructions
                         </Button>
-                    </Header>
+                    </Header> */}
                     <Header textAlign="center">
                         Suggested Expressions
                     </Header>
