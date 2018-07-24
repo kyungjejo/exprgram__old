@@ -13,7 +13,7 @@ class SubtitleModal extends Component {
     }
 
     onClose() {
-        this.props._onClose(2);
+        this.props._onClose(1);
     }
 
     render() {
