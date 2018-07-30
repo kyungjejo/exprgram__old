@@ -264,7 +264,7 @@ class MainView extends Component {
 	rewatch(idx) {
 		let modalState = this.state.activityModalState.slice();
 		modalState[idx] = false;
-		console.log(modalState);
+		// console.log(modalState);
 		this.setState({
 			rewatch:[true,idx],
 			activityModalState: modalState

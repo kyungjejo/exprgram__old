@@ -57,11 +57,11 @@ class Router extends Component {
   }
 
   _onPause(time) {
-    console.log(this.state.currentTime);
+    // console.log(this.state.currentTime);
     this.setState({
       currentTime: time
     })
-    console.log(this.state.currentTime);
+    // console.log(this.state.currentTime);
   }
 }
 

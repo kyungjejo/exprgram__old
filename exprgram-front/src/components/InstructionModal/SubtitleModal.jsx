@@ -15,7 +15,7 @@ class SubtitleModal extends Component {
 
     componentDidMount() {
         const subtitle_segment = document.querySelector('.segment-group-subtitle').getBoundingClientRect();
-        console.log(subtitle_segment);
+        // console.log(subtitle_segment);
         this.setState({
             style: {
                 top: subtitle_segment.width<550 ? subtitle_segment.top+40 : subtitle_segment.top+50,
