@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Container, Header, Button, Table, Tab, Popup } from 'semantic-ui-react';
+import { Segment, Container, Header, Button, Tab, Popup } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import {HOST_URL} from './common';
 import Title from './Title/Title';

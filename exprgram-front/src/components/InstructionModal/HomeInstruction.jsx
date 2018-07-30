@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Popup, Checkbox, Button, Image, Header } from 'semantic-ui-react';
+import { Popup, Button, Image, Header } from 'semantic-ui-react';
 
 class HomeInstruction extends Component {
     constructor(props) {

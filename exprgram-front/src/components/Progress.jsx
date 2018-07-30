@@ -43,8 +43,7 @@ class Progress extends Component {
             for (let i=0; i<Object.keys(progressGroups).length; i++) {
                 let key = Object.keys(progressGroups)[i]
                 for (let j=0; j<progressGroups[key].length; j++) {
-                    progressGroups[key][j].watched === 1 
-                    ? 
+                    (progressGroups[key][j].watched === 1) ? 
                     arr.push({
                         'videoID': progressGroups[key][j].videoID,
                         'start': progressGroups[key][j].start,

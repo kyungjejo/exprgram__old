@@ -113,7 +113,6 @@ class Forms extends Component {
                                 name="id"
                                 onChange={(e) => this.setState({id: e.target.value})}
                                 error={this.state.errorId}
-                                type="text"
                                 required>
                                 <label>ID</label>
                                 <input id="userid" placeholder='Enter your ID' />
@@ -122,7 +121,6 @@ class Forms extends Component {
                                 className="form-text"
                                 name="email"
                                 onChange={(e) => this.setState({email: e.target.value})}
-                                type="email"
                                 error={this.state.errorEmail}
                                 required>
                                 <label>Email</label>

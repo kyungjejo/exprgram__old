@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Input, Checkbox } from 'semantic-ui-react';
+import { Modal, Button, Checkbox } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import {HOST_URL} from '../common';
 import './index.css'

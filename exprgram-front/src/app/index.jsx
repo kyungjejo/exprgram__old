@@ -9,7 +9,6 @@ import Forms from '../components';
 import MainView from '../components/MainView';
 import Home from '../components/Home';
 import Progress from '../components/Progress';
-import Instruction from '../components/Instruction';
 import withTracker from './withTracker';
 
 const DEFAULT_CONFIG = {

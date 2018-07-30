@@ -4,7 +4,6 @@ import ReactGA from 'react-ga';
 
 export default function withTracker(WrappedComponent, options = {}) {
   const trackPage = (page,params = {}) => {
-    const userid = page.split('/')[page.split('/').length]
     ReactGA.set({
       page,
       ...params,

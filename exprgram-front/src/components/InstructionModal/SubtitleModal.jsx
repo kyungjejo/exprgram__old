@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Checkbox, Button, Popup, Header } from 'semantic-ui-react';
+import { Checkbox, Button, Popup, Header } from 'semantic-ui-react';
 
 import './index.css'
 
