@@ -13,7 +13,6 @@ class MainModal extends Component {
 
     componentDidMount() {
         const dropdown_expressions = document.querySelector('.dropdown-expressions').getBoundingClientRect();
-        console.log(dropdown_expressions);
         this.setState({
             style: {
                 top: dropdown_expressions.top+50,

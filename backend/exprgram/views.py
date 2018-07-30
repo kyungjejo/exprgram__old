@@ -28,7 +28,6 @@ def generate_graph(size_words=4):
                     if len(js[i][j][0].split())>4:
                         if not js[i][j][0].strip() == data[int(i)]:
                             G.add_edge(int(i),js[i][j][2],weight=js[i][j][1])
-    # print(G.edges)
     return G
 
 def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
@@ -58,8 +57,6 @@ INDEX_PATH = static('filename_index.json')
 f_index = json.load(open(INDEX_PATH))
 groups = group(generate_graph(0),4,8)
 
-# print(groups)
-
 def fetch_videoList():
     lst = glob(SUBTITLE_PATH+'*')
     js = {}
@@ -68,8 +65,6 @@ def fetch_videoList():
             f_js = json.load(f)
             js[s.split('/')[-1]] = [int(f_js['0']['start']), int(f_js[str(len(f_js)-1)]['end'])]
     return js
-
-# videoList = fetch_videoList()
 
 def sentenceInfo(g):
     # videoList= {}
@@ -216,6 +211,7 @@ def progressCheck(request):
         progress_groups = {}
         for v in lst:
             for title, vals in groups.items():
+                print(v,vals)
                 if v in vals:
                     progress_groups[f_index[str(v)][1]['sent']] = []
                     count+=1
