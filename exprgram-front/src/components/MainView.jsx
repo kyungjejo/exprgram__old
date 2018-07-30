@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Grid,  Loader, Dropdown } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
+import ReactGA from 'react-ga';
 
 import Title from './Title/Title';
 import Subtitle from './SubtitlteContainer/Subtitle';
@@ -21,8 +22,8 @@ class MainView extends Component {
 			_interval: '',
 			targetSentence: '',
 			targetSentences: '',
-			instructionModalState: [false,false],
-			activityModalState: [false,false,false],
+			instructionModalState: [true,false],
+			activityModalState: [false,false,false,false],
 			target: '',
 			activityTrigger: false,
 			prompt: false,
@@ -44,11 +45,16 @@ class MainView extends Component {
 	}
 
 	componentDidMount() {
+		// ReactGA.set({ 
+		// 	userId: this.props.match.params.userid,
+		// 	videoId: this.props.match.params.videoId,
+		// 	sentNumber: this.props.match.params.index,
+		// });
 		fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) =>
 				this.setState({
-					instructionModalState: result['userid'].length===0 ? [true,false,false] : [false,false,false]
+					instructionModalState: result['userid'] ? [false,false,false] : [true,false,false]
 				})
 			)
 

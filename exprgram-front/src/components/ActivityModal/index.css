@@ -25,3 +25,13 @@
 .disabled.input {
     background: #e6e6e6 !important;
 }
+
+.ui.checkbox {
+    display: block !important;
+}
+
+.checkbox-expression {
+    padding: 5px 0;
+    font-size: 16px !important;
+    font-weight: 450;
+}

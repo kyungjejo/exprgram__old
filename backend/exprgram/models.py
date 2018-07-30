@@ -53,3 +53,8 @@ class intentionLables(models.Model):
     target=models.IntegerField()
     label=models.TextField()
     count=models.IntegerField(default=1)
+
+class expressionSimilarity(models.Model):
+    userid=models.TextField(default="")
+    target=models.IntegerField()
+    similar=models.IntegerField()

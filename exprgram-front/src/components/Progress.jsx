@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Title from './Title/Title';
 import { Link } from 'react-router-dom';
-import CircularProgressbar from 'react-circular-progressbar';
+import ReactGA from 'react-ga';
 import 'react-circular-progressbar/dist/styles.css';
 import './index.css'
 
@@ -22,6 +22,7 @@ class Progress extends Component {
     }
 
     componentDidMount() {
+        // ReactGA.set({ userId: this.props.match.params.userid });
         fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
             .then((response) => 
@@ -41,7 +42,6 @@ class Progress extends Component {
         for (let i=0; i<Object.keys(progressGroups).length; i++) {
             let key = Object.keys(progressGroups)[i]
             for (let j=0; j<progressGroups[key].length; j++) {
-                progressGroups[key][j].watched === 1 ? console.log(progressGroups[key][j]) : '';
                 progressGroups[key][j].watched === 1 
                 ? 
                 arr.push({
@@ -56,7 +56,6 @@ class Progress extends Component {
                 '';
             }
         }
-        console.log(arr);
         return arr;
         // let count = 0;
         // for (let i=0; i<this.state.progressGroups[v].length; i++) {

@@ -4,6 +4,7 @@ import React from 'react';
 import ActivityFst from './ActivityFst';
 import ActivitySnd from './ActivitySnd';
 import ActivityTrd from './ActivityTrd';
+import ActivityFth from './ActivityFth';
 
 function Activities(props) {
     return(
@@ -24,6 +25,14 @@ function Activities(props) {
                 sentNumber={props.sentNumber} />
             <ActivityTrd 
                 open={props._openModal[2]}
+                _onClose={props._onCloseModal}
+                rewatch={props.rewatch} 
+                userid={props.userid}
+                sentNumber={props.sentNumber}
+                next={props.next}
+                targetExpression={props.taregtExpression} />
+            <ActivityFth
+                open={props._openModal[3]}
                 _onClose={props._onCloseModal}
                 rewatch={props.rewatch} 
                 userid={props.userid}

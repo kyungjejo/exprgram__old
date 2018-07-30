@@ -12,6 +12,7 @@ from .models import *
 from django.core import serializers
 from django.db.models import Count
 from django.db.models import Q
+from .common import fetch_topic
 
 data = open(static('subtitle_aggregated.txt')).readlines()
 
@@ -21,28 +22,33 @@ def generate_graph(size_words=4):
     with open(static('score.json')) as f:
         js = json.load(f)
         for i in js.keys():
-            s = set([x[0] for x in js[i] if len(x[0].split())>4])
+            s = set([x[0] for x in js[i] if len(x[0].split())>size_words])
             if len(s)>size_words:
                 for j in range(len(js[i])):
                     if len(js[i][j][0].split())>4:
                         if not js[i][j][0].strip() == data[int(i)]:
                             G.add_edge(int(i),js[i][j][2],weight=js[i][j][1])
+    # print(G.edges)
     return G
 
-def group(G=nx.Graph()):
+def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
     global data
     groups = {}
     for node in G.nodes:
-        size = 100
+        size = 0
         root = ''
         group = nx.node_connected_component(G,node)
         for n in group:
             l = len([x for x in G.neighbors(n)])
-            if l < size:
+            if l > size:
                 size=l
-                root=n        
-        if not data[root] in groups.keys():
+                root=n
+        if root and not root in groups.keys() and \
+            len(list(set([data[x] for x in list(group)])))>=size_min_set and \
+            len(list(set([data[x] for x in list(group)])))<=size_max_set:
             groups[root] = group
+    print("Number of groups: %d"  %len(groups))
+    print("Total number of expressions: %d" %len([x for x in groups.values() for x in x]))
     return groups
 
 # Create your views here.
@@ -50,7 +56,7 @@ def group(G=nx.Graph()):
 SUBTITLE_PATH = static('subtitle/')
 INDEX_PATH = static('filename_index.json')
 f_index = json.load(open(INDEX_PATH))
-groups = group(generate_graph(4))
+groups = group(generate_graph(0),4,8)
 
 # print(groups)
 
@@ -65,35 +71,57 @@ def fetch_videoList():
 
 # videoList = fetch_videoList()
 
+def sentenceInfo(g):
+    # videoList= {}
+    # videoList[f_index[str(g)][1]['sent']] = f_index[str(g)]
+    # start = int(f_index[str(g)][1]['start']) - 10
+    # start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
+    # with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
+    #     subtitleJS = json.load(f)
+    #     s = int(subtitleJS[str(start_ind)]['start'])
+    #     end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
+    #     e = int(subtitleJS[str(end_ind)]['end'])
+    #     end = int(f_index[str(g)][1]['end']) + 7
+    # videoList[f_index[str(g)][1]['sent']][1]['start'] = s if s>start else start
+    # videoList[f_index[str(g)][1]['sent']][1]['end'] = e if e<end else end
+    # videoList[f_index[str(g)][1]['sent']].append(g)
+    videoList = []
+    videoList = f_index[str(g)]
+    start = int(f_index[str(g)][1]['start']) - 10
+    start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
+    with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
+        subtitleJS = json.load(f)
+        s = int(subtitleJS[str(start_ind)]['start'])
+        end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
+        e = int(subtitleJS[str(end_ind)]['end'])
+        end = int(f_index[str(g)][1]['end']) + 7
+    videoList[1]['start'] = s if s>start else start
+    videoList[1]['end'] = e if e<end else end
+    videoList.append(g)
+    return videoList
+
 @csrf_exempt
 def fetchVideoList(request):
-    global groups
+    _groups = groups.copy()
     group = []
-    progress = [p['target'] for p in Progress.objects.filter(userid=request.GET['userid']).values('target')]
-    for g in random.sample(groups.keys(),5):
-        r = random.choice(list(groups[g]))
-        while r in progress:
-            r = random.choice(list(groups[g]))
-        group.append(r)
-    # group = random.sample(groups.keys(),10)
     videoList = {}
-    for g in group:
-        videoList[f_index[str(g)][1]['sent']] = f_index[str(g)]
-        start = int(f_index[str(g)][1]['start']) - 10
-        start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
-        with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
-            subtitleJS = json.load(f)
-            s = int(subtitleJS[str(start_ind)]['start'])
-            end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
-            e = int(subtitleJS[str(end_ind)]['end'])
-            end = int(f_index[str(g)][1]['end']) + 7
-        videoList[f_index[str(g)][1]['sent']][1]['start'] = s if s>start else start
-        videoList[f_index[str(g)][1]['sent']][1]['end'] = e if e<end else end
-        videoList[f_index[str(g)][1]['sent']].append(g)
-    # for k in groups.keys():
-    #     print (k.strip())
-    #     print ([data[x].strip() for x in groups[k]])
-    # print(len(groups.keys()))
+    progress = [p['target'] for p in Progress.objects.filter(userid=request.GET['userid']).values('target')]
+    while len(videoList.keys())<5:
+        group = random.sample(_groups.keys(),1)[0]
+        chosen_group = [x for x in list(_groups[group]) if x not in progress]
+        g = random.choice(chosen_group)
+        topic = fetch_topic([f_index[str(x)][1]['sent'] for x in chosen_group])
+        if not topic:
+            continue
+        _groups.pop(group)
+        idx = str(len(videoList))
+        videoList[idx] = {}
+        videoList[idx]['topic'] = topic
+        videoList[idx]['main'] = sentenceInfo(g)
+        videoList[idx]['related'] = []
+        for sent in chosen_group:
+            if not g == sent:
+                videoList[idx]['related'].append(sentenceInfo(sent))
     # print(videoList)
     return HttpResponse(json.dumps(videoList), content_type="application/json")
 
@@ -145,6 +173,10 @@ def progressCheck(request):
     progress_all = Progress.objects.all().values('userid').annotate(total=Count('userid')).order_by('-total')
     leaderboard = []
     js = {}
+
+    # Generating leaderboard
+    # If learner's rank is higher than 10, retrieve 9 and add learner
+    # If learner's rank is within 10, retrieve 10
     if len(progress_all)>10:
         _within_ten = False
         for i in range(10):
@@ -173,6 +205,8 @@ def progressCheck(request):
             })
     progress = Progress.objects.filter(userid=request.GET['userid'])
     js['leaderboard'] = leaderboard
+
+    # Retrieve expressions learners learned with its metadata
     if len(progress)>0:
         lst = []
         for p in progress:
@@ -180,19 +214,21 @@ def progressCheck(request):
         js['userid'] = lst
         count = 0
         progress_groups = {}
-        for title, vals in groups.items():
-            progress_groups[f_index[str(title)][1]['sent']] = []
-            for v in vals:
-                count+=1
-                progress_groups[f_index[str(title)][1]['sent']].append({
-                    'videoID': f_index[str(v)][0],
-                    'index': v,
-                    'sent': f_index[str(v)][1]['sent'],
-                    'watched': 1 if int(v) in lst else 0,
-                    'start': f_index[str(v)][1]['start']-7,
-                    'end': f_index[str(v)][1]['end']+7,
-                    'sentNum': f_index[str(v)][2],
-                })
+        for v in lst:
+            for title, vals in groups.items():
+                if v in vals:
+                    progress_groups[f_index[str(v)][1]['sent']] = []
+                    count+=1
+                    progress_groups[f_index[str(v)][1]['sent']].append({
+                        'videoID': f_index[str(v)][0],
+                        'index': v,
+                        'sent': f_index[str(v)][1]['sent'],
+                        'watched': 1,
+                        'start': f_index[str(v)][1]['start']-7,
+                        'end': f_index[str(v)][1]['end']+7,
+                        'sentNum': f_index[str(v)][2],
+                    })
+                    break
         js['count'] = count
         js['progressGroups'] = progress_groups
     else:
@@ -207,16 +243,11 @@ def activityResponse(request):
     userid = request.GET['userid']
     target = request.GET['sentNumber']
     values = json.loads(request.body.decode('utf-8'))
-    print(activityNum,values)
     if activityNum == 0:
         confidence = confidenceLabels(userid=userid,target=target,expressionValue=values['expression_value'],contextValue=values['context_value'])
         confidence.save()
 
     elif activityNum == 1:
-        similar = similarExpression(userid=userid,target=target,expr=values['similar_expression'])
-        similar.save()
-
-    elif activityNum == 2:
         relationship, created = relationshipLables.objects.get_or_create(userid=userid,target=target,label=values['relationship'].lower().strip())
         # if not created:
         #     relationship.update(count=relationship.count+1)
@@ -240,6 +271,15 @@ def activityResponse(request):
         emotion.save()
         intention.save()
         progress.save()
+    
+    elif activityNum == 2:
+        similar = similarExpression(userid=userid,target=target,expr=values['similar_expression'])
+        similar.save()
+    
+    elif activityNum == 3:
+        for sim in values['similar_expressions']:
+            similar = expressionSimilarity(target=target,similar=sim,userid=userid)
+            similar.save()
 
     # elif activityNum == 3:
     js={'success':'success'}
@@ -264,26 +304,40 @@ def fetchSimilar(request):
     """
     global groups
     _ind = request.GET['index']
-    videoList = {}
-    progress = [p['target'] for p in Progress.objects.filter(userid=request.GET['userid']).values('target')]
-    for group in groups.values():
-        if int(_ind) in list([int(x) for x in group]):
-            for g in list(group):
-                if not g in progress:
-                    videoList[f_index[str(g)][1]['sent']] = f_index[str(g)]
-                    # resetting start and end time
-                    start = f_index[str(g)][1]['start'] - 7
-                    start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
-                    with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
-                        subtitleJS = json.load(f)
-                        s = subtitleJS[str(start_ind)]['start']
-                        end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
-                        e = subtitleJS[str(end_ind)]['end']
-                        end = f_index[str(g)][1]['end'] + 7
-                    videoList[f_index[str(g)][1]['sent']][1]['start'] = s if s>start else start
-                    videoList[f_index[str(g)][1]['sent']][1]['end'] = e if e<end else end
-                    videoList[f_index[str(g)][1]['sent']].append(g)
-            return HttpResponse(json.dumps(videoList), content_type="application/json")
+    activity = 0
+    if not 'activity' in request.GET.keys():
+        videoList = {}
+        progress = [p['target'] for p in Progress.objects.filter(userid=request.GET['userid']).values('target')]
+        for group in groups.values():
+            if int(_ind) in list([int(x) for x in group]):
+                for g in list(group):
+                    if str(_ind) == str(g):
+                        continue
+                    if not g in progress:
+                        videoList[f_index[str(g)][1]['sent']] = f_index[str(g)]
+                        # resetting start and end time
+                        start = f_index[str(g)][1]['start'] - 7
+                        start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
+                        with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
+                            subtitleJS = json.load(f)
+                            s = subtitleJS[str(start_ind)]['start']
+                            end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
+                            e = subtitleJS[str(end_ind)]['end']
+                            end = f_index[str(g)][1]['end'] + 7
+                        videoList[f_index[str(g)][1]['sent']][1]['start'] = s if s>start else start
+                        videoList[f_index[str(g)][1]['sent']][1]['end'] = e if e<end else end
+                        videoList[f_index[str(g)][1]['sent']].append(g)
+                return HttpResponse(json.dumps(videoList), content_type="application/json")
+    else:
+        for vals in groups.values():
+            lst = list(vals)
+            if int(_ind) in lst:
+                js = {}
+                for l in lst:
+                    if l != int(_ind):
+                        if f_index[_ind][1]['sent'].strip() != f_index[str(l)][1]['sent'].strip():
+                            js[l] = f_index[str(l)][1]['sent']
+        return HttpResponse(json.dumps(js), content_type="application/json")
 
 
 @csrf_exempt

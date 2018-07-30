@@ -1,26 +1,53 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Container, Header, Button, Table, Tab } from 'semantic-ui-react';
+import { Segment, Container, Header, Button, Table, Tab, Popup } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import Title from './Title/Title';
 import HomeInstruction from './InstructionModal/HomeInstruction';
 import './index.css';
 
 function VideoList(props) {
+    console.log(props.videoList);
     return (
         Object.keys(props.videoList).length>0 ? 
             Object.keys(props.videoList).map((id,i) => 
-            (
-                <Link to={"/video/"+props.videoList[id][0]+"/"+parseInt(props.videoList[id][1]['start'],10)+
-                "/"+parseInt(props.videoList[id][1]['end'],10)+"/"+props.videoList[id][2]+"/"+props.videoList[id][3]+"/"+props.userid} key={i}>
-                    <Segment className='segment-item-video' textAlign='center'>
-                        {id}
-                        {/* <br/>
-                        Relationship:{"\t"}
-                        Location:
-                        Emotion: */}
-                    </Segment>
-                </Link>
+            (   
+                <Popup
+                    key={i}
+                    trigger={
+                        <Link to={"/video/"+props.videoList[id].main[0]+"/"+parseInt(props.videoList[id].main[1]['start'],10)+
+                            "/"+parseInt(props.videoList[id].main[1]['end'],10)+"/"+props.videoList[id].main[2]+"/"+props.videoList[id].main[3]+"/"+props.userid} key={i}>
+                            <Segment className='segment-item-video' textAlign='center'>
+                                {props.videoList[id].topic}
+                                {/* <br/>
+                                Relationship:{"\t"}
+                                Location:
+                                Emotion: */}
+                            </Segment>
+                        </Link>
+                    }
+                    basic="false"
+                    position={id>1 ? "right top" : "right bottom"}
+                    wide="very"
+                    content={
+                        <div>
+                            <Header as="h4" textAlign="center">Related Expressions</Header>
+                            {
+                                <p>{props.videoList[id].main[1].sent}</p>
+                            }
+                            {
+                                props.videoList[id].related.map((idx, j) =>
+                                    j<8
+                                    ?
+                                    <p key={i}>{props.videoList[id].related[j][1]['sent']}</p>
+                                    :
+                                    ''
+                                )
+                            }
+                        </div>
+                    }
+                />
             )
         )
         :
@@ -43,10 +70,19 @@ class Home extends Component {
             videoList: [],
             progress: false,
             insturction: false,
+            instructionModalState: false,
         };
     }
 
-    componentDidMount() {
+    componentDidMount() { 
+        // ReactGA.set({ userId: this.props.match.params.userid });
+        fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
+        .then(res => res.json())
+        .then((result) =>
+            this.setState({
+                instructionModalState: result['userid'] ? false : true
+            })
+        )
         fetch('/fetchVideoList?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             // .then(res => console.log(res))
             .then(res => res.json())
@@ -75,7 +111,7 @@ class Home extends Component {
             
         return(
             <div>
-                <HomeInstruction />
+                <HomeInstruction open={this.state.instructionModalState}/>
                 <Title userid={this.props.match.params.userid}/>
                 <Container className="container-videoList">
                     {/* <Header as="h3" textAlign="center">
