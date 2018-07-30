@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button, Input, Form, Header, Radio, List } from 'semantic-ui-react';
+import {HOST_URL} from '../common';
 import './index.css';
 
 class ActivitySnd extends Component {
@@ -24,7 +25,7 @@ class ActivitySnd extends Component {
     }
 
     componentDidMount() {
-        fetch('/labelBandit?target='+this.props.sentNumber, {'Access-Control-Allow-Origin':'*'})
+        fetch(HOST_URL+'/labelBandit?target='+this.props.sentNumber, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
             .then((response) => 
                 this.setState({
@@ -39,7 +40,7 @@ class ActivitySnd extends Component {
     handleSubmit() {
         const {relationship, location, intention, emotion } = this.state;
         if ( this.state.relationship && this.state.location && this.state.intention && this.state.emotion )
-        fetch("/activityResponse?number="+1+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
+        fetch(HOST_URL+"/activityResponse?number="+1+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
                 {
                     method: 'POST',
                     'Access-Control-Allow-Origin':'*',

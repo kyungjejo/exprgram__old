@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button, Input } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
+import {HOST_URL} from '../common';
 import './index.css'
 
 class ActivityTrd extends Component {
@@ -14,7 +14,7 @@ class ActivityTrd extends Component {
 
     handleSubmit() {
         if (this.state.suggestion)
-            fetch("/activityResponse?number="+2+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
+            fetch(HOST_URL+"/activityResponse?number="+2+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
                     {
                         method: 'POST',
                         'Access-Control-Allow-Origin':'*',

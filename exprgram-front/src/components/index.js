@@ -4,7 +4,7 @@ import { Container, Form, Segment, Header } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import './index.css';
 
-import { countryOptions, languageOptions, levelOptions, 
+import { HOST_URL, countryOptions, languageOptions, levelOptions, 
         familiarityOptions, reasonOptions, resideOptions } from './common';
 
 class Forms extends Component {
@@ -27,7 +27,7 @@ class Forms extends Component {
         //     submittedNative: native, submittedEnglish: english, submittedFamiliarity: familiarity
         // })
         if ( !registerselect ) {
-            fetch("/login?register=True&id="+id+"&email="+email, {
+            fetch(HOST_URL+"/login?register=True&id="+id+"&email="+email, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ class Forms extends Component {
             if ( country && native && english && familiarity && reason && reside )
             {
                 this.setState({error:false})
-                fetch('/register', {
+                fetch(HOST_URL+'/register', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

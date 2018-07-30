@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Modal, Button, List, Form, Radio, Header } from 'semantic-ui-react';
+import { Modal, Button, List, Form, Radio } from 'semantic-ui-react';
+import { HOST_URL } from '../common';
 import './index.css';
 
 class ActivityFst extends Component {
@@ -15,7 +16,7 @@ class ActivityFst extends Component {
 
     handleSubmit() {
         if (!(this.state.expression_value===0 || this.state.context_value===0))
-            fetch("/activityResponse?number="+0+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
+            fetch(HOST_URL+"/activityResponse?number="+0+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
                     {
                         method: 'POST',
                         'Access-Control-Allow-Origin':'*',

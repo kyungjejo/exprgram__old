@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Button, Input, Checkbox } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import {HOST_URL} from '../common';
 import './index.css'
 
 class ActivityFth extends Component {
@@ -15,13 +16,13 @@ class ActivityFth extends Component {
     }
 
     componentDidMount() {
-        fetch('/fetchSimilarVideos?index='+this.props.sentNumber+"&activity=1")
+        fetch(HOST_URL+'/fetchSimilarVideos?index='+this.props.sentNumber+"&activity=1")
             .then(res => res.json())
             .then((response) => this.setState({similar: response}))
     }
 
     handleSubmit() {
-        fetch("/activityResponse?number="+3+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
+        fetch(HOST_URL+"/activityResponse?number="+3+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
                 {
                     method: 'POST',
                     'Access-Control-Allow-Origin':'*',

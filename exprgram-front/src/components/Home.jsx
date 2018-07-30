@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Container, Header, Button, Table, Tab, Popup } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import {HOST_URL} from './common';
 import Title from './Title/Title';
 import HomeInstruction from './InstructionModal/HomeInstruction';
 import './index.css';
 
 function VideoList(props) {
-    console.log(props.videoList);
     return (
         Object.keys(props.videoList).length>0 ? 
             Object.keys(props.videoList).map((id,i) => 
@@ -27,8 +26,7 @@ function VideoList(props) {
                             </Segment>
                         </Link>
                     }
-                    basic="false"
-                    position={id>1 ? "right top" : "right bottom"}
+                    position={id>1 ? "top right" : "bottom right"}
                     wide="very"
                     content={
                         <div>
@@ -38,9 +36,9 @@ function VideoList(props) {
                             }
                             {
                                 props.videoList[id].related.map((idx, j) =>
-                                    j<8
+                                    j<6
                                     ?
-                                    <p key={i}>{props.videoList[id].related[j][1]['sent']}</p>
+                                    <p key={idx}>{props.videoList[id].related[j][1]['sent']}</p>
                                     :
                                     ''
                                 )
@@ -76,17 +74,15 @@ class Home extends Component {
 
     componentDidMount() { 
         // ReactGA.set({ userId: this.props.match.params.userid });
-        fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
+        fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
         .then(res => res.json())
         .then((result) =>
             this.setState({
                 instructionModalState: result['userid'] ? false : true
             })
         )
-        fetch('/fetchVideoList?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
-            // .then(res => console.log(res))
+        fetch(HOST_URL+'/fetchVideoList?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
-            // .then((response) =>console.log(response))
             .then((result) => 
                 this.setState({
                     videoList: result

@@ -3,11 +3,10 @@ import React, { Component } from 'react';
 import { Grid,  Loader, Dropdown } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
-import ReactGA from 'react-ga';
+import {HOST_URL} from './common';
 
 import Title from './Title/Title';
 import Subtitle from './SubtitlteContainer/Subtitle';
-import Buttons from './Buttons/Buttons';
 import MainModal from './InstructionModal/MainModal';
 import Activities from './ActivityModal';
 
@@ -22,7 +21,7 @@ class MainView extends Component {
 			_interval: '',
 			targetSentence: '',
 			targetSentences: '',
-			instructionModalState: [true,false],
+			instructionModalState: [false,false],
 			activityModalState: [false,false,false,false],
 			target: '',
 			activityTrigger: false,
@@ -50,15 +49,15 @@ class MainView extends Component {
 		// 	videoId: this.props.match.params.videoId,
 		// 	sentNumber: this.props.match.params.index,
 		// });
-		fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
+		fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) =>
 				this.setState({
-					instructionModalState: result['userid'] ? [false,false,false] : [true,false,false]
+					instructionModalState: result['userid'] ? [false,false] : [true,false]
 				})
 			)
 
-		fetch('/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
+		fetch(HOST_URL+'/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) => 
 				this.setState({
@@ -67,7 +66,7 @@ class MainView extends Component {
 					targetSentences: this.props.match.params.number
 				}),
 		)
-		fetch('/fetchSimilarVideos?index='+this.props.match.params.index+'&userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
+		fetch(HOST_URL+'/fetchSimilarVideos?index='+this.props.match.params.index+'&userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) => 
 				(
@@ -141,7 +140,8 @@ class MainView extends Component {
 		<div>
 			<MainModal
 				_onCloseModal={this._onCloseInstructionModal}
-				open={this.state.instructionModalState[0]} />
+				open={this.state.instructionModalState[0]}
+				/>
 			<Activities 
 				_onCloseModal={this._onCloseActivityModal}
 				_openModal={this.state.activityModalState}

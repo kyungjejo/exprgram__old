@@ -300,18 +300,20 @@ export const resideOptions = [
   //   { key: '', text: '', value: '' },
   // ]
 
-  export const steps = [
-    {
-      key: 'watch',
-      icon: 'youtube play',
-      title: 'Watch Video',
-      description: 'Choose your shipping options',
-    },
-    {
-      key: 'activity',
-      icon: 'edit',
-      title: 'Do activities',
-      description: 'Enter billing information',
-    },
-    { key: 'others', icon: 'info', title: 'Learn related expressions' },
-  ]
+export const steps = [
+  {
+    key: 'watch',
+    icon: 'youtube play',
+    title: 'Watch Video',
+    description: 'Choose your shipping options',
+  },
+  {
+    key: 'activity',
+    icon: 'edit',
+    title: 'Do activities',
+    description: 'Enter billing information',
+  },
+  { key: 'others', icon: 'info', title: 'Learn related expressions' },
+]
+
+export const HOST_URL = "http://localhost:8000";

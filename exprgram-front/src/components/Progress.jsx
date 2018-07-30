@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Title from './Title/Title';
 import { Link } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import {HOST_URL} from './common';
 import 'react-circular-progressbar/dist/styles.css';
 import './index.css'
 
@@ -23,7 +23,7 @@ class Progress extends Component {
 
     componentDidMount() {
         // ReactGA.set({ userId: this.props.match.params.userid });
-        fetch('/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
+        fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
             .then((response) => 
                 this.setState({
@@ -38,25 +38,27 @@ class Progress extends Component {
     }
 
     statGroup(progressGroups) {
-        let arr = []
-        for (let i=0; i<Object.keys(progressGroups).length; i++) {
-            let key = Object.keys(progressGroups)[i]
-            for (let j=0; j<progressGroups[key].length; j++) {
-                progressGroups[key][j].watched === 1 
-                ? 
-                arr.push({
-                    'videoID': progressGroups[key][j].videoID,
-                    'start': progressGroups[key][j].start,
-                    'end': progressGroups[key][j].end,
-                    'index': progressGroups[key][j].index,
-                    'sent': progressGroups[key][j].sent,
-                    'sentNum': progressGroups[key][j].sentNum,
-                }) 
-                : 
-                '';
+        if (progressGroups && Object.keys(progressGroups).length>0){
+            let arr = []
+            for (let i=0; i<Object.keys(progressGroups).length; i++) {
+                let key = Object.keys(progressGroups)[i]
+                for (let j=0; j<progressGroups[key].length; j++) {
+                    progressGroups[key][j].watched === 1 
+                    ? 
+                    arr.push({
+                        'videoID': progressGroups[key][j].videoID,
+                        'start': progressGroups[key][j].start,
+                        'end': progressGroups[key][j].end,
+                        'index': progressGroups[key][j].index,
+                        'sent': progressGroups[key][j].sent,
+                        'sentNum': progressGroups[key][j].sentNum,
+                    }) 
+                    : 
+                    '';
+                }
             }
+            return arr;
         }
-        return arr;
         // let count = 0;
         // for (let i=0; i<this.state.progressGroups[v].length; i++) {
         //     this.state.progressGroups[v][i].watched === 1 ? count+=1 : null
@@ -79,7 +81,7 @@ class Progress extends Component {
                                     Expressions that you've learned
                                 </Header>
                                 <Segment.Group style={{overflowY: 'scroll', height:520}}>
-                                    {Object.keys(this.state.stat).map((sent,i) =>
+                                    {this.state.stat && Object.keys(this.state.stat).map((sent,i) =>
                                         <Segment key={i}>
                                             <Link to={"/video/"+this.state.stat[i].videoID+"/"+parseInt(this.state.stat[i].start,10)+
                                             "/"+parseInt(this.state.stat[i].end,10)+"/"+this.state.stat[i].sentNum+"/"+this.state.stat[i].index+"/"+this.props.match.params.userid}>
@@ -109,7 +111,7 @@ class Progress extends Component {
                                     </Table.Header>
 
                                     <Table.Body>
-                                        {this.state.leaderboard.map((v,i) => 
+                                        {this.state.leaderboard && this.state.leaderboard.map((v,i) => 
                                             <Table.Row key={i} textAlign="center" className={v['userid']===this.props.match.params.userid ?  'row-active' : ''}>
                                                 <Table.Cell>
                                                     {v['rank']}

@@ -31,7 +31,7 @@ class Router extends Component {
     this._onPause = this._onPause.bind(this);
   }
 
-  componentBeforeMount() {
+  componentWillMount() {
     ReactGA.initialize(this.state.configs);
     ReactGA.pageview(window.location.pathname);
   }
@@ -44,7 +44,6 @@ class Router extends Component {
             <Route exact path="/" component={withTracker(Forms)} />
             <Route exact path="/home/:userid" component={withTracker(Home)} />
             <Route exact path="/progress/:userid" component={withTracker(Progress)} />
-            {/* <Route exact path="/instruction/:userid" component={withTracker(Instruction)} /> */}
             <Route path="/video/:videoId/:start/:end/:number/:index/:userid" component={withTracker(MainView)} />
           </div>
         </BrowserRouter>
