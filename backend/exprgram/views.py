@@ -211,7 +211,7 @@ def progressCheck(request):
         progress_groups = {}
         for v in lst:
             for title, vals in groups.items():
-                print(v,vals)
+                # print(v,vals)
                 if v in vals:
                     progress_groups[f_index[str(v)][1]['sent']] = []
                     count+=1

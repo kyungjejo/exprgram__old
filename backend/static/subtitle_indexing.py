@@ -17,7 +17,7 @@ with open('./subtitle_aggregated.txt','w') as w:
 		for i in range(len(sents)):
 			idx[len(idx)]=(sub.split('/')[-1],sents[i],i)
 		w.write(para+'\n')
-print(count)
+# print(count)
 open('./filename_index.json','w').write(json.dumps(idx))
 
 '''
