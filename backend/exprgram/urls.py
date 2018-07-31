@@ -12,5 +12,4 @@ urlpatterns = [
     url('progressCheck', views.progressCheck, name='progressCheck'),
     url('activityResponse', views.activityResponse, name='activityResponse'),
     url('labelBandit', views.labelBandit, name="labelBandit"),
-    re_path('.*', TemplateView.as_view(template_name='index.html')),
 ]
