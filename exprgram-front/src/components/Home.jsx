@@ -75,12 +75,18 @@ class Home extends Component {
     componentDidMount() { 
         // ReactGA.set({ userId: this.props.match.params.userid });
         fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
-        .then(res => res.json())
-        .then((result) =>
-            this.setState({
-                instructionModalState: result['userid'] ? false : true
-            })
-        )
+            .then(res => res.json())
+            .then((result) =>
+                sessionStorage.getItem('modal') === "true"
+                ?
+                this.setState({
+                    instructionModalState: false
+                })
+                :
+                this.setState({
+                    instructionModalState: result['userid'] ? false : true
+                })
+            )
         fetch(HOST_URL+'/fetchVideoList?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
             .then((result) => 

@@ -53,18 +53,18 @@ def fetch_topic(groups):
         if word in dct.keys():
             topic.append(_w[idx])
         else:
-            if len(topic)>0 and "___" in topic[-1]:
+            if len(topic)>0 and "_____" in topic[-1]:
                 continue
             if _w[idx][-1] == ',':
-                topic.append("___,")
+                topic.append("_____,")
             elif _w[idx][-1] == '.':
-                topic.append("___.")
+                topic.append("_____.")
             elif _w[idx][-1] == '!':
-                topic.append("___!")
+                topic.append("_____!")
             elif _w[idx][-1] == "?":
-                topic.append("___?")
+                topic.append("_____?")
             else:
-                topic.append("___")
+                topic.append("_____")
     # if topic.count("000")>(len(topic)/2):
     #     return
     # print('Topic Sentence: %s\n' %(" ".join(topic).strip()))

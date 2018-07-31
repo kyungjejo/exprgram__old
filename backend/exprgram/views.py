@@ -176,7 +176,7 @@ def progressCheck(request):
         _within_ten = False
         for i in range(10):
             leaderboard.append({
-                'rank': i+1,
+                'rank': i+1 if len(leaderboard)==0 or leaderboard[i-1]['total']>progress_all[i]['total'] else leaderboard[i-1]['rank'],
                 'userid': progress_all[i]['userid'],
                 'total': progress_all[i]['total']
             })
@@ -194,7 +194,7 @@ def progressCheck(request):
     else:
         for i in range(len(progress_all)):
             leaderboard.append({
-                'rank': i+1,
+                'rank': i+1 if len(leaderboard)==0 or leaderboard[i-1]['total']>progress_all[i]['total'] else leaderboard[i-1]['rank'],
                 'userid': progress_all[i]['userid'],
                 'total': progress_all[i]['total']
             })
@@ -213,9 +213,9 @@ def progressCheck(request):
             for title, vals in groups.items():
                 # print(v,vals)
                 if v in vals:
-                    progress_groups[f_index[str(v)][1]['sent']] = []
+                    progress_groups[v] = []
                     count+=1
-                    progress_groups[f_index[str(v)][1]['sent']].append({
+                    progress_groups[v].append({
                         'videoID': f_index[str(v)][0],
                         'index': v,
                         'sent': f_index[str(v)][1]['sent'],

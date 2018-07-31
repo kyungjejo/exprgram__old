@@ -82,8 +82,8 @@ class Progress extends Component {
                                 <Segment.Group style={{overflowY: 'scroll', height:520}}>
                                     {this.state.stat && Object.keys(this.state.stat).map((sent,i) =>
                                         <Segment key={i}>
-                                            <Link to={"/video/"+this.state.stat[i].videoID+"/"+parseInt(this.state.stat[i].start,10)+
-                                            "/"+parseInt(this.state.stat[i].end,10)+"/"+this.state.stat[i].sentNum+"/"+this.state.stat[i].index+"/"+this.props.match.params.userid}>
+                                            <Link to={"/video/"+this.state.stat[sent].videoID+"/"+parseInt(this.state.stat[sent].start,10)+
+                                            "/"+parseInt(this.state.stat[sent].end,10)+"/"+this.state.stat[sent].sentNum+"/"+this.state.stat[sent].index+"/"+this.props.match.params.userid}>
                                                 {this.state.stat[i].sent}
                                             </Link>
                                         </Segment>

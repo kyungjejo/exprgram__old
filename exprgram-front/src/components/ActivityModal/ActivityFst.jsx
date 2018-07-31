@@ -52,7 +52,7 @@ class ActivityFst extends Component {
                         <div>
                                 <List className="list-likert"   horizontal relaxed>
                                     <p className="form-question">
-                                        1. Choose the score that best explains your understand of the <b className="bold-emphasize">expression</b>?
+                                        1. Choose the score that best explains your understand of the <b className="bold-emphasize">expression</b>.
                                     </p>
                                     <List.Item>
                                         <List.Content>
@@ -79,7 +79,7 @@ class ActivityFst extends Component {
                                 </List>
                                 <List className="list-likert" horizontal relaxed>
                                     <p className="form-question">
-                                        2. Choose the score that best explains your understanding of the <b className="bold-emphasize">situation</b>?
+                                        2. Choose the score that best explains your understanding of the <b className="bold-emphasize">situation</b>.
                                     </p>
                                     <List.Item>
                                         <List.Content>
