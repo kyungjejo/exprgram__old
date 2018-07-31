@@ -28,6 +28,7 @@ class Forms extends Component {
         // })
         if ( !registerselect ) {
             fetch(HOST_URL+"/login?register=True&id="+id+"&email="+email, {
+                    'Access-Control-Allow-Origin':'*',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
