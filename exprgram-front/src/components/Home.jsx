@@ -56,7 +56,8 @@ function VideoList(props) {
 function ContextTab(props) {
     return (
         <Segment>
-            Sorry, currently not available.
+            Sorry, currently not available.<br />
+            Help us! We need more responses from the activities to enable this feature.
         </Segment>
     )
 }
@@ -69,7 +70,9 @@ class Home extends Component {
             progress: false,
             insturction: false,
             instructionModalState: false,
+            
         };
+        this.handleClose=this.handleClose.bind(this);
     }
 
     componentDidMount() { 
@@ -91,8 +94,12 @@ class Home extends Component {
             .then(res => res.json())
             .then((result) => 
                 this.setState({
-                    videoList: result
+                    videoList: result['videoList']
                 }))
+    }
+
+    handleClose() {
+        this.setState({instructionModalState: false});
     }
 
     render() {
@@ -113,8 +120,8 @@ class Home extends Component {
             
         return(
             <div>
-                <HomeInstruction open={this.state.instructionModalState}/>
-                <Title userid={this.props.match.params.userid}/>
+                <HomeInstruction open={this.state.instructionModalState} close={this.handleClose}/>
+                <Title userid={this.props.match.params.userid} onClick={() => this.setState({instructionModalState: true})}/>
                 <Container className="container-videoList">
                     {/* <Header as="h3" textAlign="center">
                         <Button className="button-instruction" style={{width: 'auto'}} onClick={() =>this.setState({instruction: true})}>

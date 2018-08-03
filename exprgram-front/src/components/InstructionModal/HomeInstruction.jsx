@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Image, Header } from 'semantic-ui-react';
+import { Modal, Button, Image, Header, Loader, Segment } from 'semantic-ui-react';
 
 class HomeInstruction extends Component {
     constructor(props) {
@@ -8,6 +8,8 @@ class HomeInstruction extends Component {
             btnActive: false,
             style: {},
             open: true,
+            imageLoad: false,
+            imageError: false,
         }
         this.onClose = this.onClose.bind(this);
     }
@@ -28,14 +30,14 @@ class HomeInstruction extends Component {
 
     onClose() {
         sessionStorage.setItem('modal', true);
-        this.setState({open: false})
+        this.props.close();
     }
 
     render() {
         return(
             <Modal 
                 // className={"home-instruction"}
-                open={this.props.open && this.state.open}
+                open={this.props.open}
                 style={this.state.style}
                 dimmer={'inverted'}>
                 <Modal.Header>
@@ -46,7 +48,17 @@ class HomeInstruction extends Component {
                         <p>In Exprgram, you will watch YouTube videos to learn how similar expressions are used in different contexts.</p>
                         <p>This page will look similar to the screencapture below.</p>
                         <div style={{textAlign: 'center'}}>
+                            
+                            {
+                                this.state.imageLoad
+                                ?
+                                ""
+                                :
+                                <Segment style={{border:'none', WebkitBoxShadow: 'none'}}><Loader/></Segment>
+                            }
                             <Image 
+                                onLoad={() => this.setState({imageLoad: true})}
+                                onError={() => this.setState({imageError: true})}
                                 bordered
                                 style={{maxWidth: '70%', maxHeight: '70%'}}
                                 centered

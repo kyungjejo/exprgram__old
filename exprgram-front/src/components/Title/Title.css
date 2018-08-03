@@ -1,12 +1,17 @@
-.header {
-    padding-top: 16px;
+.title-header {
+    padding-top: 16px !important;
+    background: #005874 !important;
     /* padding-bottom: 16px; */
 }
 
-.title-wrap {
+.title-background {
     background: #005874;
 }
 
 .title-text {
     color: #feff89 !important;
+}
+
+.title-wrap {
+    margin-bottom: 16px;
 }
