@@ -1,5 +1,6 @@
 {
   "proxy": "http://localhost:8000",
+  "homepage": "https://exprgram.kyungjejo.com",
   "name": "exprgram-front",
   "version": "0.1.0",
   "private": true,
