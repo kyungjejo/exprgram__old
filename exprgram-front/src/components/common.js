@@ -316,4 +316,4 @@ export const steps = [
   { key: 'others', icon: 'info', title: 'Learn related expressions' },
 ]
 //export const HOST_URL = "https://115.68.230.36:8000";
-export const HOST_URL = "exprgram";
+export const HOST_URL = "/exprgram";
