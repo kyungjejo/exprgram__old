@@ -42,65 +42,69 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
             # and len(list(set([data[x] for x in list(group)])))<=size_max_set:
             # groups[root] = group
             groups[data[int(root)]] = [data[int(x)] for x in group]
-    for g in groups.keys():
-        dct = {}
-        lemmatized_group = []
-        for x in groups[g]:
-            lemmatized = []
-            for y in x.split():
-                lemmed = lemmatize(strip_punctuation(y).split()[0], stopwords=[], min_length=0, max_length=30)
-                if len(lemmed)>0:
-                    lemmed = lemmed[0]
-                    lemmed = lemmed.decode('utf-8').split('/')[0]
-                    lemmatized.append(lemmed)
-                    if lemmed in dct.keys():
-                        dct[lemmed] = dct[lemmed]+1
-                    else:
-                        dct[lemmed] = 1
-                else:
-                    y_original = y.lower().strip('.').strip('!').strip('?')
-                    if y_original in dct.keys():
-                        dct[y_original] = dct[y_original]+1
-                    else:
-                        dct[y_original] = 1
-                    lemmatized.append(y_original)
-            lemmatized_group.append(lemmatized)
-            # for y in preprocess_string(x, filters=(strip_tags,strip_punctuation,strip_multiple_whitespaces,strip_numeric,stem_text)):
-        _max = 0
-        _sent = ''
-        pop_list = []
-        for x,val in dct.items():
-            if val<int(len(groups[g])/2):
-                pop_list.append(x)
-        for p in pop_list:
-            dct.pop(p)
-        count_list = []
-        for idx, x in enumerate(lemmatized_group):
-            count = 0
-            # for y in preprocess_string(x, filters=(strip_tags,strip_punctuation,strip_multiple_whitespaces,strip_numeric,stem_text)):
-            for y in x:
-                if y in dct.keys():
-                    count += 1
-            count_list.append(count)
-            # if count>_max:
-            #     _max = count
-            #     _sent = idx
-        _sent = heapq.nlargest(3, range(len(count_list)), key=count_list.__getitem__)[1]
-        sent = groups[g][_sent]
-        topic = []
-        for idx, word in enumerate(lemmatized_group[_sent]):
-            if word in dct.keys():
-                topic.append(sent.split()[idx])
-            else:
-                if len(topic)>0 and topic[-1] == "000":
-                    continue
-                topic.append("000")
-        if topic.count("000")>(len(topic)/2):
-            continue
-        print('Topic Sentence: %s\n' %(" ".join(topic).strip()))
-        for idx,_sent in enumerate(groups[g]):
-            print("%d. %s" %(idx,_sent.strip()))
-        print("\n")
+    count = 0
+    for g in groups:
+        count+=len(groups[g])
+    print(count)
+    # for g in groups.keys():
+    #     dct = {}
+    #     lemmatized_group = []
+    #     for x in groups[g]:
+    #         lemmatized = []
+    #         for y in x.split():
+    #             lemmed = lemmatize(strip_punctuation(y).split()[0], stopwords=[], min_length=0, max_length=30)
+    #             if len(lemmed)>0:
+    #                 lemmed = lemmed[0]
+    #                 lemmed = lemmed.decode('utf-8').split('/')[0]
+    #                 lemmatized.append(lemmed)
+    #                 if lemmed in dct.keys():
+    #                     dct[lemmed] = dct[lemmed]+1
+    #                 else:
+    #                     dct[lemmed] = 1
+    #             else:
+    #                 y_original = y.lower().strip('.').strip('!').strip('?')
+    #                 if y_original in dct.keys():
+    #                     dct[y_original] = dct[y_original]+1
+    #                 else:
+    #                     dct[y_original] = 1
+    #                 lemmatized.append(y_original)
+    #         lemmatized_group.append(lemmatized)
+    #         # for y in preprocess_string(x, filters=(strip_tags,strip_punctuation,strip_multiple_whitespaces,strip_numeric,stem_text)):
+    #     _max = 0
+    #     _sent = ''
+    #     pop_list = []
+    #     for x,val in dct.items():
+    #         if val<int(len(groups[g])/2):
+    #             pop_list.append(x)
+    #     for p in pop_list:
+    #         dct.pop(p)
+    #     count_list = []
+    #     for idx, x in enumerate(lemmatized_group):
+    #         count = 0
+    #         # for y in preprocess_string(x, filters=(strip_tags,strip_punctuation,strip_multiple_whitespaces,strip_numeric,stem_text)):
+    #         for y in x:
+    #             if y in dct.keys():
+    #                 count += 1
+    #         count_list.append(count)
+    #         # if count>_max:
+    #         #     _max = count
+    #         #     _sent = idx
+    #     _sent = heapq.nlargest(3, range(len(count_list)), key=count_list.__getitem__)[1]
+    #     sent = groups[g][_sent]
+    #     topic = []
+    #     for idx, word in enumerate(lemmatized_group[_sent]):
+    #         if word in dct.keys():
+    #             topic.append(sent.split()[idx])
+    #         else:
+    #             if len(topic)>0 and topic[-1] == "000":
+    #                 continue
+    #             topic.append("000")
+    #     if topic.count("000")>(len(topic)/2):
+    #         continue
+    #     print('Topic Sentence: %s\n' %(" ".join(topic).strip()))
+    #     for idx,_sent in enumerate(groups[g]):
+    #         print("%d. %s" %(idx,_sent.strip()))
+    #     print("\n")
 
         
     # print(len(groups.keys()))
@@ -129,5 +133,5 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
     #     plt.show()
     return groups
 # os.mkdir('../static/graph/'+str(19))
-group(generate_graph(0),5,5)
+group(generate_graph(0),3,18)
 # groups = group(generate_graph(0),15,15)

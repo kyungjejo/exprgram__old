@@ -117,8 +117,30 @@ def fetchVideoList(request):
         for sent in chosen_group:
             if not g == sent:
                 videoList[idx]['related'].append(sentenceInfo(sent))
-    # print(videoList)
-    return HttpResponse(json.dumps(videoList), content_type="application/json")
+
+    # all verified labels
+    #   select * from (select target,  label, count(label) as total from exprgram_relationshiplables group by label, target) where total>10
+    # choose maxmimum five from
+    #   select distinct label from (select * from (select target,  label, count(label) as total from exprgram_relationshiplables group by label, target) where total>1)
+    
+    # verified_relationship_set = relationshipLables.objects.raw('select * from (select id, target,  label, count(label) as total from exprgram_relationshiplables group by label, target) where total>1')
+    # verified_relationship_labels = relationshipLables.objects.raw('select distinct label from (select * from (select id, target, label, count(label) as total from exprgram_relationshiplables group by label, target) where total>1)')
+    # print(verified_relationship_set.columns)
+    # print(list(verified_relationship_set))
+    # print(len(list(verified_relationship_set)))
+    # for v in verified_relationship_set:
+    #     print(v.label)
+    # print(verified_relationship_labels.columns)
+    # print(list(verified_relationship_labels))
+    # print(len(list(verified_relationship_labels)))
+    # for v in verified_relationship_labels:
+    #     print(v.label)
+    # 
+    # select * from (select target,  label, count(label) as total from exprgram_emotionlables group by label, target) where total>10
+    # select * from (select target,  label, count(label) as total from exprgram_locationlables group by label, target) where total>10
+    js={}
+    js['videoList'] = videoList
+    return HttpResponse(json.dumps(js), content_type="application/json")
 
 @csrf_exempt
 def fetchSubtitle(request):
