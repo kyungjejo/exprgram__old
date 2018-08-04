@@ -175,7 +175,7 @@ class ActivitySnd extends Component {
                                                 onChange={(e,value) => 
                                                     this.setState({location: value['value']})
                                                 }
-                                                placeholder="e.g., living room, cafe, home"/>
+                                                placeholder="e.g., room, cafe, home"/>
                                     </div>
                                 </List.Item>
                             </List>
@@ -185,7 +185,7 @@ class ActivitySnd extends Component {
                             type="text" 
                             size="small" 
                             onChange={(e,value) => this.setState({location: value['value']})}
-                            placeholder="e.g., living room, cafe, home"/>
+                            placeholder="e.g., room, cafe, home"/>
                         }
                         </Form.Field>
                         <Form.Field>

@@ -104,7 +104,10 @@ def fetchVideoList(request):
     while len(videoList.keys())<5:
         group = random.sample(_groups.keys(),1)[0]
         chosen_group = [x for x in list(_groups[group]) if x not in progress]
-        g = random.choice(chosen_group)
+        try:
+            g = random.choice(chosen_group)
+        except IndexError:
+            continue
         topic = fetch_topic([f_index[str(x)][1]['sent'] for x in chosen_group])
         if not topic:
             continue

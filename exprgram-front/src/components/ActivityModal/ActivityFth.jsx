@@ -41,10 +41,13 @@ class ActivityFth extends Component {
 
     render() {
         if (this.state.redirect) {
-            this.setState({redirect: false})
-            return <Redirect push to={"/video/"+this.props.next[0]+"/"+parseInt(this.props.next[1]['start'],10)+
-                                    "/"+parseInt(this.props.next[1]['end'],10)+"/"+this.props.next[2]+"/"+
-                                    this.props.next[3]+"/"+this.props.userid} />;
+            if (this.props.next.length>0)
+                return <Redirect push to={"/video/"+this.props.next[0]+"/"+parseInt(this.props.next[1]['start'],10)+
+                    "/"+parseInt(this.props.next[1]['end'],10)+"/"+this.props.next[2]+"/"+
+                    this.props.next[3]+"/"+this.props.userid} />
+            else {
+                return <Redirect push to={"/home/"+this.props.userid} />
+            }
         }
         return(
             <Modal open={this.props.open}
