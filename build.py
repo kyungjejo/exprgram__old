@@ -33,7 +33,7 @@ with open('./backend/build/static/'+css) as text:
     url = re.findall("url\((/static/media.*?)\)", new_css)
     for idx,u in enumerate(url):
         _u = u.strip("/static/")
-        _u = "static/build/"+_u
+        _u = "../"+_u
         new_css = re.sub(u, _u, new_css)
 with open('./backend/build/static/'+css, 'w') as text:
     text.write(new_css)
