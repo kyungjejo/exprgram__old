@@ -96,6 +96,7 @@ class Forms extends Component {
                     <Header className="form-text" textAlign="center">
                         Exprgram
                     </Header>
+                    <Header className="form-text" as="h5">Best works on Chrome browser</Header>
                     <Form onSubmit={this.handleSubmit}>
 
                         {/* <div style={{display:!(this.state.registerselect)? 'block' : 'none'}}>

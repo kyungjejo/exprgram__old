@@ -15,7 +15,7 @@ subprocess.call("cp -rf %s/exprgram-front/build %s/backend/" %(PATH,PATH), shell
 subprocess.call("mv ./backend/build/manifest.json ./backend/static", shell=True)
 
 with open("./backend/build/index.html") as text:
-    html = '{% load static %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>'+text.read()
+    html = '{% load static %}'+text.read()
     html = re.sub('/manifest.json', "{% static 'manifest.json' %}", html)
     css = re.compile("/static/css/main.*.css").search(html).group().replace("/static/",'')
     new_css = "{% static '"+css+"' %}"
