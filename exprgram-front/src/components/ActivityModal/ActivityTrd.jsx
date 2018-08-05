@@ -45,8 +45,8 @@ class ActivityTrd extends Component {
                 <Modal.Actions>
                     {/* <Checkbox label='I have read the instruction and understand what buttons are for.' 
                                 onClick={() => this.setState({btnActive: !this.state.btnActive})}/> */}
-                    <Button onClick={() => (this.props.rewatch(2))}>Rewatch</Button>
-                    <Button onClick={this.handleSubmit}>Next</Button>
+                    <Button onClick={() => (this.props.rewatch(2))} primary>Rewatch</Button>
+                    <Button onClick={this.handleSubmit} positive>Next</Button>
                 </Modal.Actions>
             </Modal>
         )

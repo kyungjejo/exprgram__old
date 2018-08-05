@@ -76,8 +76,8 @@ class ActivityFth extends Component {
                 <Modal.Actions>
                     {/* <Checkbox label='I have read the instruction and understand what buttons are for.' 
                                 onClick={() => this.setState({btnActive: !this.state.btnActive})}/> */}
-                    <Button onClick={() => (this.props.rewatch(3))}>Rewatch</Button>
-                    <Button onClick={this.handleSubmit}>Submit and Process to Next Video</Button>
+                    <Button onClick={() => (this.props.rewatch(3))} primary>Rewatch</Button>
+                    <Button onClick={this.handleSubmit} positive>Submit and Process to Next Video</Button>
                 </Modal.Actions>
             </Modal>
         )

@@ -108,8 +108,8 @@ class ActivityFst extends Component {
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button onClick={() => (this.props.rewatch(0))}>Rewatch</Button>
-                    <Button onClick={this.handleSubmit}>Next</Button>
+                    <Button onClick={() => (this.props.rewatch(0))} primary>Rewatch</Button>
+                    <Button onClick={this.handleSubmit} positive>Next</Button>
                 </Modal.Actions>
             </Modal>
         )
