@@ -58,16 +58,16 @@ class TermsofUse extends Component {
                 <Modal.Content>
                     <div>
                     <Header as="h4">This is a KAIST research experiment.</Header>
-                    <p>This website consists of a video player that stops periodically to ask questions about the video being watched.</p>
+                    <p>This website shows you groups of related expressions and ask questions about the usage of expressions.</p>
                     <Header as="h5">Featured features:</Header>
                     <List bulleted> 
-                    <List.Item>Watch videos that have been annotated and have an interactive timeline</List.Item>
-                    <List.Item>Answer questions and vote on what other users have answered as you watch videos</List.Item>
+                    <List.Item>Watch videos that are grouped by the related expressions</List.Item>
+                    <List.Item>Answer questions and vote on what other learners have answered as you watch videos</List.Item>
                     </List>
                     <Header as="h5">User Study</Header>
-                    The purpose of this study is to test how well our system can help learners to learn the usage of expressions in different situation. 
-                    As you watch videos, we will record actions such as the answers you submit and videos you've watched. 
-                    We also record your id to map data to your sessions. We may ask you for an interview later regarding your experience which you may choose not to participate.
+                    The purpose of this study is to test how well our system can help learners to learn the usage of expressions in different situation.<br /> 
+                    As you watch videos, we will record actions such as the answers you submit and videos you've watched. <br />
+                    We also record your id to map data to your sessions. We may ask you for an interview later regarding your experience which you may choose not to participate.<br />
                     You may revisit or remain on the site for as long as you’d like.
                     <Header as="h5">Requirements:</Header>
                     <List bulleted> 
@@ -77,8 +77,7 @@ class TermsofUse extends Component {
                     <Header as="h5">Guarantees:</Header>
                     <List bulleted> 
                     <List.Item>Your participation is voluntary. You may abandon this study at any time.</List.Item>
-                    <List.Item>Your personal information will never be sent to researchers.</List.Item>
-                    <List.Item>All your information submitted on registration will not be used for any non-research purpose.</List.Item>
+                    <List.Item>All your information submitted on registration will be secured and not be used for any non-research purpose.</List.Item>
                     <List.Item>Please email kyungjejo@kaist.ac.kr with any concerns or questions.</List.Item>
                     </List>
                     <Checkbox label="I agree with terms and conditions." onChange={(e,value) => value['checked'] ? this.setState({agree: true}) : this.setState({agree:false})}></Checkbox>
