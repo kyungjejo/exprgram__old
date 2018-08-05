@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { Container, Form, Segment, Header } from 'semantic-ui-react';
+import TermsofUse from './InstructionModal/TermsofUse';
 import { Redirect } from 'react-router-dom';
 import './index.css';
 
@@ -16,9 +17,11 @@ class Forms extends Component {
             registerselect: false,
             errorId: false, errorEmail: false, 
             errorCountry: false, errorNative: false, errorEnglish: false, errorFamiliarity: false, errorReside: false, errorReason: false,
-            redirect: false
+            redirect: false,
+            terms: true,
         }
         this.handleSubmit=this.handleSubmit.bind(this);
+        this.onClose=this.onClose.bind(this);
     }
 
     handleSubmit = () => {
@@ -85,6 +88,15 @@ class Forms extends Component {
         }
       }
 
+    onClose(id,email) {
+        if (id && email) {
+            this.setState({id: id, email: email, terms: false}, () => this.handleSubmit());
+        }
+        else{
+            this.setState({terms: false})
+        }
+    }
+
     render() {
         if (this.state.redirect) {
             return <Redirect push to={"/home/"+this.state.id} />;
@@ -92,6 +104,7 @@ class Forms extends Component {
 
         return(
             <Container className="form-container">
+                <TermsofUse open={this.state.terms} onClose={this.onClose}/>
                 <Segment className="form-segment">
                     <Header className="form-text" textAlign="center">
                         Exprgram
