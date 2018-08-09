@@ -4,7 +4,7 @@ import { Modal, Button, Image, Header, Loader, Segment, List, Checkbox } from 's
 class NestedModal extends Component {
     close = () => {
         this.setState({ open: false }),
-        this.props.onClose('kyungjejo','kyungjejo@kaist.ac.kr')
+        this.props.onClose('exprgram123','kyungjejo@gmail.com')
     }
   
     render() {

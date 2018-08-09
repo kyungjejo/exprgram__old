@@ -56,7 +56,7 @@ class MainView extends Component {
 			.then(res => res.json())
 			.then((result) =>
 				this.setState({
-					instructionModalState: result['userid'] ? [false,false] : [true,false]
+					instructionModalState: result['userid'] ? [false,false,false] : [true,false,false]
 				})
 			)
 
