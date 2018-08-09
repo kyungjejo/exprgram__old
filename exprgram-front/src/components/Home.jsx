@@ -132,7 +132,7 @@ class Home extends Component {
                     </Header> */}
                     {this.props.match.params.userid==="exprgram123" ?
                         <Header textAlign="center" as="h4">
-                            To use full features including customized progress history and avoiding from instruction appearing every time, please go register your own account.
+                            To use full features including customized progress history and avoiding from instruction appearing every time, please go to <a href="https://exprgram.kyungjejo.com">the link</a> and register your own account.
                         </Header>
                         :
                         ''
