@@ -29,7 +29,7 @@ class PreModal extends Component {
                     <p>After you've watched the video, you will be asked to complete questions regarding the expression.</p>
                     <p>To learn more about other features of Exprgram, please press 'Next'.</p>
                     <Checkbox label='Okay, let me see the instructions.' 
-                                onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
+                                onClick={(e,value) => value['checked'] ? this.setState({btnActive: true}) : this.setState({btnActive:false})}/>
                 </Modal.Content>
                 <Modal.Actions>
                     <Button disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
