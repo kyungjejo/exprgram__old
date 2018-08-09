@@ -220,7 +220,7 @@ class Forms extends Component {
                     </Form>
                 </Segment>
                 <div style={{display: this.state.registerselect ? 'none' : 'block', textAlign: 'center'}}>
-                    <Button onClick={() => this.setState({id: 'exprgram123', email: 'kyungjejo@gmai.com', temrs: false}, () => this.handleSubmit())} primary>To proceed without registering, click here</Button>
+                    <Button onClick={() => this.setState({id: 'exprgram123', email: 'kyungjejo@gmail.com', temrs: false}, () => this.handleSubmit())} primary>To proceed without registering, click here</Button>
                 </div>
             </Container>
         )
