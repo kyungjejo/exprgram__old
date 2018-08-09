@@ -31,8 +31,13 @@ def fetch_topic(groups):
     _sent = ''
     pop_list = []
     for x,val in dct.items():
-        if val<int(math.ceil(float(len(groups))/3*2)):
-            pop_list.append(x)
+        tag = nltk.pos_tag([x])[0][1]
+        if tag == 'NN' or tag == 'NNS':
+            if val<int(math.ceil(float(len(groups))/3*2)):
+                pop_list.append(x)
+        else:
+            if val<int(len(groups)/3*2):
+                pop_list.append(x)
     for p in pop_list:
         dct.pop(p)
     count_list = []
