@@ -76,6 +76,8 @@ class Home extends Component {
     }
 
     componentDidMount() { 
+        if (this.props.match.params.userid==="exprgram123")
+            this.setState({instructionModalState: true})
         // ReactGA.set({ userId: this.props.match.params.userid });
         fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
             .then(res => res.json())
@@ -120,7 +122,7 @@ class Home extends Component {
             
         return(
             <div>
-                <HomeInstruction open={this.props.match.params.userid==="exprgram123" ? true : this.state.instructionModalState} close={this.handleClose}/>
+                <HomeInstruction open={this.state.instructionModalState} close={this.handleClose}/>
                 <Title userid={this.props.match.params.userid} onClick={() => this.setState({instructionModalState: true})}/>
                 <Container className="container-videoList">
                     {/* <Header as="h3" textAlign="center">
