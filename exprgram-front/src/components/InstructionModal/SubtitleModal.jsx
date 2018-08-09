@@ -43,7 +43,7 @@ class SubtitleModal extends Component {
                         <p>2. You can navigate video by clicking on a sentence.</p>
                         <p>3. Few seconds after <span id="target">blue sentence</span> is played, you will be asked to complete activities.</p>
                         <Checkbox label='I have read the instruction and know when the activities will appear.' 
-                                    onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
+                                    onClick={(e,value) => value['checked'] ? this.setState({btnActive: true}) : this.setState({btnActive:false})}/>
                         <Divider />
                         <Button floated="right" disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
                     </div>

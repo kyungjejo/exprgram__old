@@ -42,7 +42,7 @@ class MainModal extends Component {
                         <p>2. Other expressions that are similar to <b>target expression</b>.</p>
                         <p>3. By clicking, you can jump to other videos.</p>
                         <Checkbox label='I have read the instruction and know how to use the dropdown bar above.' 
-                                   onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
+                                   onClick={(e,value) => value['checked'] ? this.setState({btnActive: true}) : this.setState({btnActive:false})}/>
                         <Divider />
                         <Button floated={'right'} disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
                     </div>
