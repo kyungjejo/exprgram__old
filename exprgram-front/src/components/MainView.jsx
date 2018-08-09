@@ -45,6 +45,8 @@ class MainView extends Component {
 	}
 
 	componentDidMount() {
+		if (this.props.match.params.userid === 'exprgram123')
+			this.setState({instructionModalState: [true,false,false]})
 		// ReactGA.set({ 
 		// 	userId: this.props.match.params.userid,
 		// 	videoId: this.props.match.params.videoId,

@@ -1,6 +1,7 @@
 from gensim.parsing.preprocessing import *
 from gensim.utils import lemmatize
 import heapq, nltk
+nltk.download('averaged_perceptron_tagger')
 def fetch_topic(groups):
     dct = {}
     lemmatized_group = []
