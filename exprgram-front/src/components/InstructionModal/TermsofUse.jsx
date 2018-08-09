@@ -84,7 +84,7 @@ class TermsofUse extends Component {
                     </div>
                 </Modal.Content>
                 <Modal.Actions>
-                    <NestedModal open={this.state.open} onClose={this.onSubClose} onClose={this.props.onClose}/>
+                    <NestedModal open={this.state.open} onSubClose={this.onSubClose} onClose={this.props.onClose}/>
                     <Button onClick={this.onBack}>Close</Button>
                     <Button onClick={() => this.props.onClose()} disabled={!this.state.agree}>Agree</Button>
                 </Modal.Actions>
