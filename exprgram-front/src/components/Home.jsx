@@ -130,6 +130,13 @@ class Home extends Component {
                             Instructions
                         </Button>
                     </Header> */}
+                    {this.props.match.params.userid==="exprgram123" ?
+                        <Header textAlign="center" as="h4">
+                            To use full features including customized progress history and avoiding from instruction appearing every time, please go register your own account.
+                        </Header>
+                        :
+                        ''
+                    }
                     <Header textAlign="center">
                         Suggested Expressions
                     </Header>
