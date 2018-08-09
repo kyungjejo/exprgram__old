@@ -1,6 +1,7 @@
 from gensim.parsing.preprocessing import *
 from gensim.utils import lemmatize
 import heapq, nltk
+import math
 nltk.download('averaged_perceptron_tagger')
 def fetch_topic(groups):
     dct = {}
@@ -30,7 +31,7 @@ def fetch_topic(groups):
     _sent = ''
     pop_list = []
     for x,val in dct.items():
-        if val<int(len(groups)/3*2):
+        if val<int(math.ceil(float(len(groups))/3*2)):
             pop_list.append(x)
     for p in pop_list:
         dct.pop(p)
