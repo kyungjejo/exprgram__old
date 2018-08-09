@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Container, Form, Segment, Header } from 'semantic-ui-react';
+import { Container, Form, Segment, Header, Button } from 'semantic-ui-react';
 import TermsofUse from './InstructionModal/TermsofUse';
 import { Redirect } from 'react-router-dom';
 import './index.css';
@@ -217,9 +217,11 @@ class Forms extends Component {
                                 Submit
                             </Form.Button>
                         </div>
-
                     </Form>
                 </Segment>
+                <div style={{display: this.state.registerselect ? 'none' : 'block', textAlign: 'center'}}>
+                    <Button onClick={() => this.setState({id: 'exprgram123', email: 'kyungjejo@gmai.com', temrs: false}, () => this.handleSubmit())} primary>To proceed without registering, click here</Button>
+                </div>
             </Container>
         )
     }

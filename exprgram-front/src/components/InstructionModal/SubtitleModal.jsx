@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox, Button, Popup, Header } from 'semantic-ui-react';
+import { Checkbox, Button, Popup, Header, Divider } from 'semantic-ui-react';
 
 import './index.css'
 
@@ -27,7 +27,7 @@ class SubtitleModal extends Component {
     }
 
     onClose() {
-        this.props._onClose(1);
+        this.props._onClose(2);
     }
 
     render() {
@@ -44,6 +44,7 @@ class SubtitleModal extends Component {
                         <p>3. Few seconds after <span id="target">blue sentence</span> is played, you will be asked to complete activities.</p>
                         <Checkbox label='I have read the instruction and know when the activities will appear.' 
                                     onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
+                        <Divider />
                         <Button floated="right" disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
                     </div>
                 }

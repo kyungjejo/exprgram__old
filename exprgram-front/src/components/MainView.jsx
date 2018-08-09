@@ -9,6 +9,7 @@ import Title from './Title/Title';
 import Subtitle from './SubtitlteContainer/Subtitle';
 import MainModal from './InstructionModal/MainModal';
 import Activities from './ActivityModal';
+import PreModal from './InstructionModal/PreModal';
 
 class MainView extends Component {
 	
@@ -21,7 +22,7 @@ class MainView extends Component {
 			_interval: '',
 			targetSentence: '',
 			targetSentences: '',
-			instructionModalState: [false,false],
+			instructionModalState: [false,false,false],
 			activityModalState: [false,false,false,false],
 			target: '',
 			activityTrigger: false,
@@ -138,9 +139,14 @@ class MainView extends Component {
 		}
 		return (
 		<div>
+			<PreModal
+				_onCloseModal={this._onCloseInstructionModal}
+				targetSentence={this.state.targetSentence}
+				open={this.state.instructionModalState[0]}
+				/>
 			<MainModal
 				_onCloseModal={this._onCloseInstructionModal}
-				open={this.state.instructionModalState[0]}
+				open={this.state.instructionModalState[1]}
 				/>
 			<Activities 
 				_onCloseModal={this._onCloseActivityModal}
@@ -150,7 +156,7 @@ class MainView extends Component {
 				userid={this.props.match.params.userid}
 				sentNumber={this.props.match.params.index}
 				next={this.state.next} />
-			<Title userid={this.props.match.params.userid} onClick={() => this.setState({instructionModalState: [true,false]})}/>
+			<Title userid={this.props.match.params.userid} onClick={() => this.setState({instructionModalState: [true,false,false]})}/>
 			<div className="container center" id="main">
 				<Dropdown text={this.state.targetSentence ? 'Current sentence: '+this.state.targetSentence : 'Current sentence: '} 
 						className='link item dropdown-expressions' fluid size='medium'>
@@ -197,7 +203,7 @@ class MainView extends Component {
 									targetSentence={this.props.match.params.number}
 									_onClickSent={this._onClickSent}
 									_onCloseModal={this._onCloseInstructionModal}
-									_openModal={this.state.instructionModalState[1]}
+									_openModal={this.state.instructionModalState[2]}
 									onReady={this._onReady}
 									prompt={this.state.prompt}>
 								</Subtitle>

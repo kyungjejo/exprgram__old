@@ -1,7 +1,6 @@
 from gensim.parsing.preprocessing import *
 from gensim.utils import lemmatize
-import heapq
-
+import heapq, nltk
 def fetch_topic(groups):
     dct = {}
     lemmatized_group = []
@@ -30,13 +29,15 @@ def fetch_topic(groups):
     _sent = ''
     pop_list = []
     for x,val in dct.items():
-        if val<int(len(groups)/2):
+        if val<int(len(groups)/3*2):
             pop_list.append(x)
     for p in pop_list:
         dct.pop(p)
     count_list = []
+    total = 0
     for idx, x in enumerate(lemmatized_group):
         count = 0
+        total+=len(x)
         # for y in preprocess_string(x, filters=(strip_tags,strip_punctuation,strip_multiple_whitespaces,strip_numeric,stem_text)):
         for y in x:
             if y in dct.keys():
@@ -45,12 +46,22 @@ def fetch_topic(groups):
         # if count>_max:
         #     _max = count
         #     _sent = idx
-    _sent = heapq.nlargest(3, range(len(count_list)), key=count_list.__getitem__)[0]
+    avg = int(total/len(lemmatized_group))
+    len_list = []
+    for idx, x in enumerate(lemmatized_group):
+        len_list.append(abs(len(x)-avg))
+    count_rank = heapq.nlargest(len(count_list), range(len(count_list)), key=count_list.__getitem__)
+    len_rank = heapq.nsmallest(len(len_list), range(len(len_list)), key=len_list.__getitem__)
+    rank = [0] * len(lemmatized_group)
+    for i in range(len(lemmatized_group)):
+        rank[count_rank[i]] += i
+        rank[len_rank[i]] += (i+1)
+    _sent = heapq.nsmallest(len(rank), range(len(rank)), key=rank.__getitem__)[0]
     sent = groups[_sent]
     topic = []
     for idx, word in enumerate(lemmatized_group[_sent]):
         _w = sent.split()
-        if word in dct.keys():
+        if word in dct.keys() and nltk.pos_tag([word])[0][1] != 'NNP':
             topic.append(_w[idx])
         else:
             if len(topic)>0 and "_____" in topic[-1]:

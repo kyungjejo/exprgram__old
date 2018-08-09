@@ -24,7 +24,7 @@ class MainModal extends Component {
     }
 
     onClose() {
-        this.props._onCloseModal(0);
+        this.props._onCloseModal(1);
     }
 
     render() {
@@ -43,6 +43,7 @@ class MainModal extends Component {
                         <p>3. By clicking, you can jump to other videos.</p>
                         <Checkbox label='I have read the instruction and know how to use the dropdown bar above.' 
                                    onClick={() => this.setState({btnActive: !this.state.btnActive})}/>
+                        <Divider />
                         <Button floated={'right'} disabled={!this.state.btnActive} onClick={this.onClose}>Next</Button>
                     </div>
                 }
