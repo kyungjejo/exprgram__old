@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Router.css';
 
-import { BrowserRouter, Route } from 'react-router-dom'
+import { Route, BrowserRouter } from 'react-router-dom'
 
 import ReactGA from 'react-ga';
 
@@ -10,6 +10,8 @@ import MainView from '../components/MainView';
 import Home from '../components/Home';
 import Progress from '../components/Progress';
 import withTracker from './withTracker';
+import Test from '../components/Test';
+import TestHome from '../components/TestHome';
 
 const DEFAULT_CONFIG = {
   trackingId: 'UA-123028321-1',
@@ -44,6 +46,8 @@ class Router extends Component {
             <Route exact path="/home/:userid" component={withTracker(Home)} />
             <Route exact path="/progress/:userid" component={withTracker(Progress)} />
             <Route path="/video/:videoId/:start/:end/:number/:index/:userid" component={withTracker(MainView)} />
+            <Route path="/testhome/:userid" component={withTracker(TestHome)} />
+            <Route path="/test/:videoId/:start/:end/:number/:index/:userid/:type" component={withTracker(Test)} />
           </div>
         </BrowserRouter>
       </div>

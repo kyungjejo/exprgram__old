@@ -38,7 +38,8 @@ class ActivitySnd extends Component {
     }
 
     handleSubmit() {
-        const {relationship, location, intention, emotion } = this.state;
+        const {relationship, location, intention, emotion,
+                relationship_lst, location_lst, intention_lst, emotion_lst } = this.state;
         if ( this.state.relationship && this.state.location && this.state.intention && this.state.emotion )
         fetch(HOST_URL+"/activityResponse?number="+1+"&sentNumber="+this.props.sentNumber+"&userid="+this.props.userid, 
                 {
@@ -53,6 +54,10 @@ class ActivitySnd extends Component {
                         location: location,
                         intention: intention,
                         emotion: emotion,
+                        relationship_lst: relationship_lst,
+                        location_lst: location_lst,
+                        intention_lst: intention_lst,
+                        emotion_lst: emotion_lst
                     })
                 }
             )

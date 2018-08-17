@@ -26,35 +26,31 @@ class confidenceLabels(models.Model):
     contextValue=models.IntegerField()
 
 class similarExpression(models.Model):
-    userid=models.TextField()
     target=models.IntegerField()
     expr=models.TextField()
+    vote=models.IntegerField(default=0)
 
 class relationshipLables(models.Model):
-    userid=models.TextField()
     target=models.IntegerField()
     label=models.TextField()
-    count=models.IntegerField(default=1)
+    vote=models.IntegerField(default=0)
 
 class locationLables(models.Model):
-    userid=models.TextField()
     target=models.IntegerField()
     label=models.TextField()
-    count=models.IntegerField(default=1)
+    vote=models.IntegerField(default=0)
 
 class emotionLables(models.Model):
-    userid=models.TextField()
     target=models.IntegerField()
     label=models.TextField()
-    count=models.IntegerField(default=1)
+    vote=models.IntegerField(default=0)
 
 class intentionLables(models.Model):
-    userid=models.TextField()
     target=models.IntegerField()
     label=models.TextField()
-    count=models.IntegerField(default=1)
+    vote=models.IntegerField(default=0)
 
 class expressionSimilarity(models.Model):
-    userid=models.TextField(default="")
     target=models.IntegerField()
     similar=models.IntegerField()
+    vote=models.IntegerField(default=0)

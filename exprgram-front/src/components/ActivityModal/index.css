@@ -35,3 +35,8 @@
     font-size: 16px !important;
     font-weight: 450;
 }
+
+.margin-small {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}

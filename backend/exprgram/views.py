@@ -13,6 +13,7 @@ from django.core import serializers
 from django.db.models import Count
 from django.db.models import Q
 from .common import fetch_topic
+from random import shuffle
 
 data = open(static('subtitle_aggregated.txt')).readlines()
 
@@ -46,6 +47,21 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
             len(list(set([data[x] for x in list(group)])))>=size_min_set and \
             len(list(set([data[x] for x in list(group)])))<=size_max_set:
             groups[root] = group
+    lst_remove = []
+    for g in groups.keys():
+        group = [data[x] for x in groups[g]]
+        topic = fetch_topic(group)
+        topic = topic.split(' ')
+        _count = 0
+        for t in topic:
+            if '_____' in t:
+                _count+=1
+        if _count>2 or _count>=len(topic)/2:
+            lst_remove.append(g)
+        if len(topic)<4:
+            lst_remove.append(g)
+    for l in lst_remove:
+        groups.pop(l,None)
     print("Number of groups: %d"  %len(groups))
     print("Total number of expressions: %d" %len([x for x in groups.values() for x in x]))
     return groups
@@ -55,7 +71,7 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
 SUBTITLE_PATH = static('subtitle/')
 INDEX_PATH = static('filename_index.json')
 f_index = json.load(open(INDEX_PATH))
-groups = group(generate_graph(0),4,8)
+groups = group(generate_graph(0),5,5)
 
 def fetch_videoList():
     lst = glob(SUBTITLE_PATH+'*')
@@ -255,7 +271,6 @@ def progressCheck(request):
     else:
         js = {}
     
-    
     return HttpResponse(json.dumps(js), content_type="application/json")
 
 @csrf_exempt
@@ -264,42 +279,79 @@ def activityResponse(request):
     userid = request.GET['userid']
     target = request.GET['sentNumber']
     values = json.loads(request.body.decode('utf-8'))
+    # relationship_
     if activityNum == 0:
         confidence = confidenceLabels(userid=userid,target=target,expressionValue=values['expression_value'],contextValue=values['context_value'])
         confidence.save()
 
     elif activityNum == 1:
-        relationship, created = relationshipLables.objects.get_or_create(userid=userid,target=target,label=values['relationship'].lower().strip())
-        # if not created:
-        #     relationship.update(count=relationship.count+1)
-        
-        location, created = locationLables.objects.get_or_create(userid=userid,target=target,label=values['location'].lower().strip())
-        # if not created:
-        #     location.update(count=location.count+1)
-        
-        emotion, created = emotionLables.objects.get_or_create(userid=userid,target=target,label=values['emotion'].lower().strip())
-        # if not created:
-        #     emotion.update(count=emotion.count+1)
+        relationship = values['relationship']
+        location = values['location']
+        emotion = values['emotion']
+        intention = values['intention']
+        relationship_lst = [r for r in values['relationship_lst'] if r != relationship.lower().strip()] if len(values['relationship_lst'])>0 else []
+        location_lst = [l for l in values['location_lst'] if l != location.lower().strip()] if len(values['location_lst'])>0 else []
+        emotion_lst = [e for e in values['emotion_lst'] if e != emotion.lower().strip()] if len(values['emotion_lst'])>0 else []
+        intention_lst = [i for i in values['intention_lst'] if i != intention] if len(values['intention_lst'])>0 else []
 
-        intention, created = intentionLables.objects.get_or_create(userid=userid,target=target,label=values['intention'].strip())
-        # if not created:
-        #     intention.update(count=intention.count+1)
+        relationship, created = relationshipLables.objects.get_or_create(target=target,label=relationship.lower().strip())
+        if not created:
+            relationship.vote = relationship.vote+1
+            relationship.save()
+        for r in relationship_lst:
+            relationship = relationshipLables.objects.get(target=target,label=r.lower().strip())
+            relationship.vote = relationship.vote-1
+            relationship.save()
+
+        location, created = locationLables.objects.get_or_create(target=target,label=location.lower().strip())
+        if not created:
+            location.vote = location.vote+1
+            location.save()
+        for l in location_lst:
+            location = locationLables.objects.get(target=target,label=l.lower().strip())
+            location.vote = location.vote-1
+            location.save()
+        
+        emotion, created = emotionLables.objects.get_or_create(target=target,label=emotion.lower().strip())
+        if not created:
+            emotion.vote = emotion.vote+1
+            emotion.save()
+        for e in emotion_lst:
+            emotion = emotionLables.objects.get(target=target,label=e.lower().strip())
+            emotion.vote = emotion.vote-1
+            emotion.save()
+
+        intention, created = intentionLables.objects.get_or_create(target=target,label=intention.strip())
+        if not created:
+            intention.vote = intention.vote+1
+            intention.save()
+        for i in intention_lst:
+            intention = intentionLables.objects.get(target=target,label=i)
+            intention.vote = intention.vote-1
+            intention.save()
 
         progress, created = Progress.objects.get_or_create(userid=userid,target=target)
-
-        relationship.save()
-        location.save()
-        emotion.save()
-        intention.save()
-        progress.save()
     
     elif activityNum == 2:
-        similar = similarExpression(userid=userid,target=target,expr=values['similar_expression'])
+        similar = similarExpression(target=target,expr=values['similar_expression'])
         similar.save()
     
     elif activityNum == 3:
         for sim in values['similar_expressions']:
-            similar = expressionSimilarity(target=target,similar=sim,userid=userid)
+            similar = expressionSimilarity(target=target,similar=sim)
+            similar.vote = similar.vote+1
+            similar.save()
+        for sim in [v for v in values['original_expressions'] if v not in values['similar_expressions']]:
+            similar = expressionSimilarity(target=target,similar=sim)
+            similar.vote = similar.vote-1
+            similar.save()
+        for sim in values['similar_expressions_user']:
+            similar = similarExpression(target=target,id=sim)
+            similar.vote = similar.vote+1
+            similar.save()
+        for sim in [v for v in values['original_expressions_user'] if v not in values['similar_expressions_user']]:
+            similar = expressionSimilarity(target=target,similar=sim)
+            similar.vote = similar.vote-1
             similar.save()
 
     # elif activityNum == 3:
@@ -350,14 +402,23 @@ def fetchSimilar(request):
                         videoList[f_index[str(g)][1]['sent']].append(g)
                 return HttpResponse(json.dumps(videoList), content_type="application/json")
     else:
+        js = {}
+        js['sent2vec'] = {}
         for vals in groups.values():
             lst = list(vals)
             if int(_ind) in lst:
-                js = {}
                 for l in lst:
                     if l != int(_ind):
                         if f_index[_ind][1]['sent'].strip() != f_index[str(l)][1]['sent'].strip():
-                            js[l] = f_index[str(l)][1]['sent']
+                            js['sent2vec'][l] = f_index[str(l)][1]['sent']
+        exprs = list(similarExpression.objects.filter(target=_ind))
+        count = 6-len(js['sent2vec'].keys())
+        js['user'] = {}
+        shuffle(exprs)
+        for idx, e in enumerate(exprs):
+            if idx>count:
+                break
+            js['user'][e.id] = e.expr
         return HttpResponse(json.dumps(js), content_type="application/json")
 
 
@@ -379,14 +440,22 @@ def labelBandit(request):
         }
     if len(relationship)>=3:
         relationship = relationship[:3]
-        js['relationship'] = [r['label'].capitalize() for r in relationship]
+        lst = [r['label'].capitalize() for r in relationship]
+        shuffle(lst)
+        js['relationship'] = lst
     if len(location)>=3:
         location = location[:3]
-        js['location'] = [r['label'].capitalize() for r in location]
+        lst = [r['label'].capitalize() for r in location]
+        shuffle(lst)
+        js['location'] = lst
     if len(emotion)>=3:
         emotion = emotion[:3]
-        js['emotion'] = [r['label'].capitalize() for r in emotion]
+        lst = [r['label'].capitalize() for r in emotion]
+        shuffle(lst)
+        js['emotion'] = lst
     if len(intention)>=3:
         intention = intention[:3]
-        js['intention'] = [r['label'].capitalize() for r in intention]
+        lst = [r['label'] for r in intention]
+        shuffle(lst)
+        js['intention'] = lst
     return HttpResponse(json.dumps(js), content_type="application/json")

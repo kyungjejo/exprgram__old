@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 
-import { Grid,  Loader, Dropdown } from 'semantic-ui-react';
+import { Grid,  Loader, Dropdown, Header } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
 import {HOST_URL} from './common';
 
 import Title from './Title/Title';
 import Subtitle from './SubtitlteContainer/Subtitle';
-import MainModal from './InstructionModal/MainModal';
 import Activities from './ActivityModal';
-import PreModal from './InstructionModal/PreModal';
 
-class MainView extends Component {
+class Test extends Component {
 	
 	constructor(props) {
 		super(props);
@@ -22,8 +20,7 @@ class MainView extends Component {
 			_interval: '',
 			targetSentence: '',
 			targetSentences: '',
-			instructionModalState: [false,false,false],
-			activityModalState: [false,false,false,false],
+			activityModalState: [],
 			target: '',
 			activityTrigger: false,
 			prompt: false,
@@ -31,6 +28,7 @@ class MainView extends Component {
 			videoID: this.props.match.params.videoId,
 			rewatch: [false,-1],
 			next: [],
+			type: '',
 		}
 		this.updateActiveSentence = this.updateActiveSentence.bind(this);
 		this._onPlay = this._onPlay.bind(this);
@@ -38,28 +36,26 @@ class MainView extends Component {
 		this._onReady = this._onReady.bind(this);
 		this._onEnd = this._onEnd.bind(this);
 		this._onClickSent = this._onClickSent.bind(this);
-		this._onCloseInstructionModal = this._onCloseInstructionModal.bind(this);
 		this._onStateChange=this._onStateChange.bind(this);
 		this._onCloseActivityModal = this._onCloseActivityModal.bind(this);
 		this.rewatch = this.rewatch.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.props.match.params.userid === 'exprgram123')
-			this.setState({instructionModalState: [true,false,false]})
 		// ReactGA.set({ 
 		// 	userId: this.props.match.params.userid,
 		// 	videoId: this.props.match.params.videoId,
 		// 	sentNumber: this.props.match.params.index,
 		// });
-		fetch(HOST_URL+'/progressCheck?userid='+this.props.match.params.userid, {'Access-Control-Allow-Origin':'*'})
-			.then(res => res.json())
-			.then((result) =>
-				this.setState({
-					instructionModalState: result['userid'] ? [false,false,false] : [true,false,false]
-				})
-			)
+		const type = this.props.match.params.type;
+		this.setState({
+			type: type
+		})
 
+		this.setState({
+			activityModalState: type === 'a' ? [false] : [false,false,false,false,false]
+		})
+		
 		fetch(HOST_URL+'/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
 			.then(res => res.json())
 			.then((result) => 
@@ -97,33 +93,34 @@ class MainView extends Component {
 		});
 	}
 
-	componentWillUpdate() {
-		if (this.state.videoID !== this.props.match.params.videoId) {
-			window.location.reload();
-			// this.setState({videoID: this.props.match.params.videoId});
-			// fetch('/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
-			// .then(res => res.json())
-			// .then((result) => 
-			// 	this.setState({
-			// 		subtitle: result,
-			// 		targetSentence: result[this.props.match.params.number]['sent'],
-			// 		targetSentences: this.props.match.params.number
-			// 	})
-			// )
-			// fetch('/fetchSimilarVideos?index='+this.props.match.params.index, {'Access-Control-Allow-Origin':'*'})
-			// 	.then(res => res.json())
-			// 	.then((result) => this.setState({
-			// 		similar: result
-			// 	}))
-			
-			// const state = this.state.instructionModalState.slice();
-			// // state[0] = true;
-			// this.setState({
-			// 	instructionModalState: state,
-			// 	activeSentence: this.props.match.params.number
-			// });
-		}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.match.params.type === 'b' && this.state.type !== 'b') 
+			this.setState({type:'b'}, () => window.location.reload())
 	}
+	// componentWillUpdate() {
+	// 		// this.setState({videoID: this.props.match.params.videoId});
+	// 		// fetch('/fetchSubtitle?videoId='+this.props.match.params.videoId, {'Access-Control-Allow-Origin':'*'})
+	// 		// .then(res => res.json())
+	// 		// .then((result) => 
+	// 		// 	this.setState({
+	// 		// 		subtitle: result,
+	// 		// 		targetSentence: result[this.props.match.params.number]['sent'],
+	// 		// 		targetSentences: this.props.match.params.number
+	// 		// 	})
+	// 		// )
+	// 		// fetch('/fetchSimilarVideos?index='+this.props.match.params.index, {'Access-Control-Allow-Origin':'*'})
+	// 		// 	.then(res => res.json())
+	// 		// 	.then((result) => this.setState({
+	// 		// 		similar: result
+	// 		// 	}))
+			
+	// 		// const state = this.state.instructionModalState.slice();
+	// 		// // state[0] = true;
+	// 		// this.setState({
+	// 		// 	instructionModalState: state,
+	// 		// 	activeSentence: this.props.match.params.number
+	// 		// });
+	// }
 
 	render() {
 		const opts = {
@@ -141,43 +138,24 @@ class MainView extends Component {
 		}
 		return (
 		<div>
-			<PreModal
-				_onCloseModal={this._onCloseInstructionModal}
-				targetSentence={this.state.targetSentence}
-				open={this.state.instructionModalState[0]}
-				/>
-			<MainModal
-				_onCloseModal={this._onCloseInstructionModal}
-				open={this.state.instructionModalState[1]}
-				/>
 			<Activities 
 				_onCloseModal={this._onCloseActivityModal}
 				_openModal={this.state.activityModalState}
 				targetExpression={this.state.targetSentence}
 				rewatch={this.rewatch}
 				userid={this.props.match.params.userid}
-				sentNumber={this.props.match.params.index}
 				next={this.state.next}
-				type={this.props.match.params.type} />
-			<Title userid={this.props.match.params.userid} onClick={() => this.setState({instructionModalState: [true,false,false]})}/>
+				videoId={this.props.match.params.videoId}
+				start={this.props.match.params.start}
+				end={this.props.match.params.end}
+				number={this.props.match.params.number}
+				sentNumber={this.props.match.params.index}
+                type={this.props.match.params.type} />
+			<Title userid={this.props.match.params.userid}/>
 			<div className="container center" id="main">
-				<Dropdown text={this.state.targetSentence ? 'Current sentence: '+this.state.targetSentence : 'Current sentence: '} 
-						className='link item dropdown-expressions' fluid size='medium'>
-					<Dropdown.Menu className="dropdown-expressions-menu">
-						<Dropdown.Header className="dropdown-header">Related Expressions</Dropdown.Header>
-						{
-							Object.keys(this.state.similar).map(((id, i) => 
-								(
-									<Link key={i} to={"/video/"+this.state.similar[id][0]+"/"+parseInt(this.state.similar[id][1]['start'],10)+
-										"/"+parseInt(this.state.similar[id][1]['end'],10)+"/"+this.state.similar[id][2]+"/"+this.state.similar[id][3]+"/"+this.props.match.params.userid}>
-										<Dropdown.Item className="dropdown-items">{this.state.similar[id][1]['sent']}</Dropdown.Item>
-									</Link>
-								)	
-							)
-							)
-						}
-					</Dropdown.Menu>
-				</Dropdown>
+				<Header as='h3' textAlign={'center'}>
+                    {this.state.targetSentence ? 'Current sentence: '+this.state.targetSentence : 'Current sentence: '} 
+				</Header>
 				<br />
 				<Grid columns={2} divided>
 					<Grid.Row>
@@ -205,8 +183,6 @@ class MainView extends Component {
 									activeSentence={this.state.activeSentence}
 									targetSentence={this.props.match.params.number}
 									_onClickSent={this._onClickSent}
-									_onCloseModal={this._onCloseInstructionModal}
-									_openModal={this.state.instructionModalState[2]}
 									onReady={this._onReady}
 									prompt={this.state.prompt}>
 								</Subtitle>
@@ -214,28 +190,6 @@ class MainView extends Component {
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
-				{/* {
-					!this.state.target &&
-					<Grid columns={2}>
-					<Grid.Row>
-						<Grid.Column textAlign="center" className="grid-buttons">
-							<Loader active />
-						</Grid.Column>
-						<Grid.Column>
-						</Grid.Column>
-					</Grid.Row>
-					</Grid>
-				}
-				{
-					this.state.target &&
-					<Buttons 
-						target={this.state.target}
-						playing={this.state.playing}
-						_onPlay={this._onPlay}
-						_onPause={this._onPause}
-						_onCloseModal={this._onCloseInstructionModal}
-						_openModal={this.state.instructionModalState[1]}/>
-				} */}
 				</div>
 			</div>
 		)
@@ -271,6 +225,7 @@ class MainView extends Component {
 	}
 
 	rewatch(idx) {
+		const type = this.props.match.params.type;
 		let modalState = this.state.activityModalState.slice();
 		modalState[idx] = false;
 		// console.log(modalState);
@@ -295,19 +250,6 @@ class MainView extends Component {
 			activityModalState: modalState,
 			targetSentences: target,
 			activityTrigger: false,
-		});
-	}
-
-	// Managed separately into two functions
-	// onClose functions for Instruction modals and activity modals
-	_onCloseInstructionModal(idx) {
-		const modalState = this.state.instructionModalState.slice();
-		modalState[idx] = false;
-		if (idx+1<this.state.instructionModalState.length)
-			modalState[idx+1] = true;
-		else this.state.target.seekTo(this.state.target.getCurrentTime()-4);
-		this.setState({
-			instructionModalState: modalState
 		});
 	}
 
@@ -380,4 +322,4 @@ class MainView extends Component {
 
 }
 
-export default MainView;
+export default Test;
