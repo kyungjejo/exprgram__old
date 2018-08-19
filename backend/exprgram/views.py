@@ -16,6 +16,25 @@ from .common import fetch_topic
 from random import shuffle
 
 data = open(static('subtitle_aggregated.txt')).readlines()
+SUBTITLE_PATH = static('subtitle/')
+INDEX_PATH = static('filename_index.json')
+f_index = json.load(open(INDEX_PATH))
+
+def sentenceInfo(g):
+    videoList = []
+    videoList = f_index[str(g)]
+    start = int(f_index[str(g)][1]['start']) - 10
+    start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
+    with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
+        subtitleJS = json.load(f)
+        s = int(subtitleJS[str(start_ind)]['start'])
+        end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
+        e = int(subtitleJS[str(end_ind)]['end'])
+        end = int(f_index[str(g)][1]['end']) + 7
+    videoList[1]['start'] = s if s>start else start
+    videoList[1]['end'] = e if e<end else end
+    videoList.append(g)
+    return videoList
 
 def generate_graph(size_words=4):
     global data
@@ -40,14 +59,16 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
         group = nx.node_connected_component(G,node)
         for n in group:
             l = len([x for x in G.neighbors(n)])
-            if l > size:
+            if l >= size:
                 size=l
                 root=n
         if root and not root in groups.keys() and \
             len(list(set([data[x] for x in list(group)])))>=size_min_set and \
-            len(list(set([data[x] for x in list(group)])))<=size_max_set:
+            len(list(set([data[x] for x in list(group)])))<=size_max_set and \
+            len(list([data[x] for x in list(group)]))<len(list(set([data[x] for x in list(group)])))+3:
             groups[root] = group
     lst_remove = []
+    count=0
     for g in groups.keys():
         group = [data[x] for x in groups[g]]
         topic = fetch_topic(group)
@@ -60,18 +81,24 @@ def group(G=nx.Graph(),size_min_set=3, size_max_set=7):
             lst_remove.append(g)
         if len(topic)<4:
             lst_remove.append(g)
+        if '_____' in topic[0]:
+            lst_remove.append(g)
+        if g not in lst_remove:
+            count+=1
+            # print ("%d, Topic: %s, Representative: %s, length: %d" %(g, " ".join(topic),data[g].strip(), len(groups[g])))
+            # print ("https://exprgram.kyungjejo.com/video/%s/%s/%s/%s/%s/{userid}" %(sentenceInfo(g)[0],sentenceInfo(g)[1]['start'],sentenceInfo(g)[1]['end'],sentenceInfo(g)[2],sentenceInfo(g)[3]))
+            # print ("\n")
+            # "http://localhost:3000/video/NZ6_ucAP5Ag/183/197/71/4829/kyungjejo"
+            # print ("Related Expressions: %s" %" ".join([data[x] for x in groups[g]]))
+
     for l in lst_remove:
         groups.pop(l,None)
-    print("Number of groups: %d"  %len(groups))
-    print("Total number of expressions: %d" %len([x for x in groups.values() for x in x]))
+    # print("Number of groups: %d"  %len(groups))
+    # print("Total number of expressions: %d" %len([x for x in groups.values() for x in x]))
     return groups
 
 # Create your views here.
-
-SUBTITLE_PATH = static('subtitle/')
-INDEX_PATH = static('filename_index.json')
-f_index = json.load(open(INDEX_PATH))
-groups = group(generate_graph(0),5,5)
+groups = group(generate_graph(0),5,8)
 
 def fetch_videoList():
     lst = glob(SUBTITLE_PATH+'*')
@@ -82,42 +109,15 @@ def fetch_videoList():
             js[s.split('/')[-1]] = [int(f_js['0']['start']), int(f_js[str(len(f_js)-1)]['end'])]
     return js
 
-def sentenceInfo(g):
-    # videoList= {}
-    # videoList[f_index[str(g)][1]['sent']] = f_index[str(g)]
-    # start = int(f_index[str(g)][1]['start']) - 10
-    # start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
-    # with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
-    #     subtitleJS = json.load(f)
-    #     s = int(subtitleJS[str(start_ind)]['start'])
-    #     end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
-    #     e = int(subtitleJS[str(end_ind)]['end'])
-    #     end = int(f_index[str(g)][1]['end']) + 7
-    # videoList[f_index[str(g)][1]['sent']][1]['start'] = s if s>start else start
-    # videoList[f_index[str(g)][1]['sent']][1]['end'] = e if e<end else end
-    # videoList[f_index[str(g)][1]['sent']].append(g)
-    videoList = []
-    videoList = f_index[str(g)]
-    start = int(f_index[str(g)][1]['start']) - 10
-    start_ind = f_index[str(g)][2] - 5 if (f_index[str(g)][2])-5>0 else 0
-    with open(SUBTITLE_PATH+f_index[str(g)][0]) as f:
-        subtitleJS = json.load(f)
-        s = int(subtitleJS[str(start_ind)]['start'])
-        end_ind = f_index[str(g)][2] + 5 if f_index[str(g)][2] + 5<(len(subtitleJS)-1) else len(subtitleJS)-1
-        e = int(subtitleJS[str(end_ind)]['end'])
-        end = int(f_index[str(g)][1]['end']) + 7
-    videoList[1]['start'] = s if s>start else start
-    videoList[1]['end'] = e if e<end else end
-    videoList.append(g)
-    return videoList
-
 @csrf_exempt
 def fetchVideoList(request):
     _groups = groups.copy()
     group = []
     videoList = {}
     progress = [p['target'] for p in Progress.objects.filter(userid=request.GET['userid']).values('target')]
-    while len(videoList.keys())<5:
+    for g in [12186,28633,37080,6365,30300,19158,24667,22392,23187,37715,27572,23826]:
+        _groups.pop(g,None)
+    while len(videoList.keys())<5 and len(_groups.keys())>len(videoList.keys()):
         group = random.sample(_groups.keys(),1)[0]
         chosen_group = [x for x in list(_groups[group]) if x not in progress]
         try:
@@ -289,46 +289,46 @@ def activityResponse(request):
         location = values['location']
         emotion = values['emotion']
         intention = values['intention']
-        relationship_lst = [r for r in values['relationship_lst'] if r != relationship.lower().strip()] if len(values['relationship_lst'])>0 else []
-        location_lst = [l for l in values['location_lst'] if l != location.lower().strip()] if len(values['location_lst'])>0 else []
-        emotion_lst = [e for e in values['emotion_lst'] if e != emotion.lower().strip()] if len(values['emotion_lst'])>0 else []
+        relationship_lst = [r for r in values['relationship_lst'] if r != relationship] if len(values['relationship_lst'])>0 else []
+        location_lst = [l for l in values['location_lst'] if l != location] if len(values['location_lst'])>0 else []
+        emotion_lst = [e for e in values['emotion_lst'] if e != emotion] if len(values['emotion_lst'])>0 else []
         intention_lst = [i for i in values['intention_lst'] if i != intention] if len(values['intention_lst'])>0 else []
 
-        relationship, created = relationshipLables.objects.get_or_create(target=target,label=relationship.lower().strip())
+        _relationship, created = relationshipLables.objects.get_or_create(target=target,label=relationship.lower().strip())
         if not created:
-            relationship.vote = relationship.vote+1
-            relationship.save()
+            _relationship.vote = _relationship.vote+1
+            _relationship.save()
         for r in relationship_lst:
-            relationship = relationshipLables.objects.get(target=target,label=r.lower().strip())
-            relationship.vote = relationship.vote-1
-            relationship.save()
+            _relationship = relationshipLables.objects.get(target=target,label=r.lower().strip())
+            _relationship.vote = _relationship.vote-1
+            _relationship.save()
 
-        location, created = locationLables.objects.get_or_create(target=target,label=location.lower().strip())
+        _location, created = locationLables.objects.get_or_create(target=target,label=location.lower().strip())
         if not created:
-            location.vote = location.vote+1
-            location.save()
+            _location.vote = _location.vote+1
+            _location.save()
         for l in location_lst:
-            location = locationLables.objects.get(target=target,label=l.lower().strip())
-            location.vote = location.vote-1
-            location.save()
+            _location = locationLables.objects.get(target=target,label=l.lower().strip())
+            _location.vote = _location.vote-1
+            _location.save()
         
-        emotion, created = emotionLables.objects.get_or_create(target=target,label=emotion.lower().strip())
+        _emotion, created = emotionLables.objects.get_or_create(target=target,label=emotion.lower().strip())
         if not created:
-            emotion.vote = emotion.vote+1
-            emotion.save()
+            _emotion.vote = _emotion.vote+1
+            _emotion.save()
         for e in emotion_lst:
-            emotion = emotionLables.objects.get(target=target,label=e.lower().strip())
-            emotion.vote = emotion.vote-1
-            emotion.save()
+            _emotion = emotionLables.objects.get(target=target,label=e.lower().strip())
+            _emotion.vote = _emotion.vote-1
+            _emotion.save()
 
-        intention, created = intentionLables.objects.get_or_create(target=target,label=intention.strip())
+        _intention, created = intentionLables.objects.get_or_create(target=target,label=intention.strip())
         if not created:
-            intention.vote = intention.vote+1
-            intention.save()
+            _intention.vote = _intention.vote+1
+            _intention.save()
         for i in intention_lst:
-            intention = intentionLables.objects.get(target=target,label=i)
-            intention.vote = intention.vote-1
-            intention.save()
+            _intention = intentionLables.objects.get(target=target,label=i)
+            _intention.vote = _intention.vote-1
+            _intention.save()
 
         progress, created = Progress.objects.get_or_create(userid=userid,target=target)
     
@@ -337,22 +337,33 @@ def activityResponse(request):
         similar.save()
     
     elif activityNum == 3:
+        js = values['js']
         for sim in values['similar_expressions']:
-            similar = expressionSimilarity(target=target,similar=sim)
-            similar.vote = similar.vote+1
-            similar.save()
+            for j in js[sim]:
+                similar = expressionSimilarity.objects.filter(target=target,similar=j)
+                if len(similar)>0:
+                    for s in similar:
+                        s.vote = s.vote+1
+                        s.save()
+                else:
+                    expressionSimilarity.objects.create(target=target,similar=j,vote=1)
+            similar = similarExpression.objects.filter(target=target,expr=sim)
+            for s in similar:
+                s.vote = s.vote+1
+                s.save()
         for sim in [v for v in values['original_expressions'] if v not in values['similar_expressions']]:
-            similar = expressionSimilarity(target=target,similar=sim)
-            similar.vote = similar.vote-1
-            similar.save()
-        for sim in values['similar_expressions_user']:
-            similar = similarExpression(target=target,id=sim)
-            similar.vote = similar.vote+1
-            similar.save()
-        for sim in [v for v in values['original_expressions_user'] if v not in values['similar_expressions_user']]:
-            similar = expressionSimilarity(target=target,similar=sim)
-            similar.vote = similar.vote-1
-            similar.save()
+            for j in js[sim]:
+                similar = expressionSimilarity.objects.filter(target=target,similar=j)
+                if len(similar)>0:
+                    for s in similar:
+                        s.vote = s.vote-1
+                        s.save()
+                else:
+                    expressionSimilarity.objects.create(target=target,similar=j,vote=-1)
+            similar = similarExpression.objects.filter(target=target,expr=sim)
+            for s in similar:
+                s.vote = s.vote-1
+                s.save()
 
     # elif activityNum == 3:
     js={'success':'success'}
@@ -403,35 +414,49 @@ def fetchSimilar(request):
                 return HttpResponse(json.dumps(videoList), content_type="application/json")
     else:
         js = {}
-        js['sent2vec'] = {}
+        js['json'] = {}
+        similar_exprs = []
         for vals in groups.values():
-            lst = list(vals)
-            if int(_ind) in lst:
-                for l in lst:
-                    if l != int(_ind):
-                        if f_index[_ind][1]['sent'].strip() != f_index[str(l)][1]['sent'].strip():
-                            js['sent2vec'][l] = f_index[str(l)][1]['sent']
-        exprs = list(similarExpression.objects.filter(target=_ind))
-        count = 6-len(js['sent2vec'].keys())
-        js['user'] = {}
+            values = list(vals)
+            if int(_ind) in values:
+                for l in values:
+                    if l != int(_ind) and f_index[_ind][1]['sent'].strip() != f_index[str(l)][1]['sent'].strip():
+                        if expressionSimilarity.objects.filter(target=_ind,similar=l).first():
+                            if expressionSimilarity.objects.filter(target=_ind,similar=l,vote__lte=-6).first():
+                                continue
+                        if f_index[str(l)][1]['sent'] not in js['json'].keys():
+                            js['json'][f_index[str(l)][1]['sent']] = [l]
+                        else:
+                            js['json'][f_index[str(l)][1]['sent']].append(l)
+                        similar_exprs.append(f_index[str(l)][1]['sent'])
+        similar_exprs = list(set(similar_exprs))
+        exprs = list(similarExpression.objects.filter(target=_ind,vote__gte=-5))
         shuffle(exprs)
         for idx, e in enumerate(exprs):
-            if idx>count:
+            if len(similar_exprs)>=7:
                 break
-            js['user'][e.id] = e.expr
+            if e.expr not in similar_exprs:
+                js['json'][e.expr] = []
+                similar_exprs.append(e.expr)
+        js['similar'] = similar_exprs
         return HttpResponse(json.dumps(js), content_type="application/json")
 
 
 @csrf_exempt
 def labelBandit(request):
     target = request.GET['target']
-    relationship = relationshipLables.objects.filter(target=target).values('label').annotate(total=Count('label')).order_by('-total')
+    relationship = relationshipLables.objects.filter(target=target)
+    voted_relationship = relationshipLables.objects.filter(target=target, vote__gte=-5).values('label').order_by('-vote')
 
-    location = locationLables.objects.filter(target=target).values('label').annotate(total=Count('label')).order_by('-total')
+    location = locationLables.objects.filter(target=target)
+    voted_location = locationLables.objects.filter(target=target, vote__gte=-5).values('label').order_by('-vote')
 
-    emotion = emotionLables.objects.filter(target=target).values('label').annotate(total=Count('label')).order_by('-total')
+    emotion = emotionLables.objects.filter(target=target)
+    voted_emotion = emotionLables.objects.filter(target=target, vote__gte=-5).values('label').order_by('-vote')
 
-    intention = intentionLables.objects.filter(target=target).values('label').annotate(total=Count('label')).order_by('-total')
+    intention = relationshipLables.objects.filter(target=target)
+    voted_intention = intentionLables.objects.filter(target=target, vote__gte=-5).values('label').order_by('-vote')
+
     js={
         "relationship": [],
         "location": [],
@@ -439,23 +464,55 @@ def labelBandit(request):
         "intention": [],
         }
     if len(relationship)>=3:
-        relationship = relationship[:3]
-        lst = [r['label'].capitalize() for r in relationship]
+        count=0
+        rel=[]
+        for v_r in voted_relationship:
+            count+=1
+            if count>2:
+                break
+            rel.append(v_r)
+        if len(voted_relationship)>2:
+            rel.append(random.choice(voted_relationship[2:]))
+        lst = [r['label'].capitalize() for r in rel]
         shuffle(lst)
         js['relationship'] = lst
     if len(location)>=3:
-        location = location[:3]
-        lst = [r['label'].capitalize() for r in location]
+        count=0
+        rel=[]
+        for v_l in voted_location:
+            count+=1
+            if count>2:
+                break
+            rel.append(v_l)
+        if len(voted_location)>2:
+            rel.append(random.choice(voted_location[2:]))
+        lst = [r['label'].capitalize() for r in rel]
         shuffle(lst)
         js['location'] = lst
     if len(emotion)>=3:
-        emotion = emotion[:3]
-        lst = [r['label'].capitalize() for r in emotion]
+        count=0
+        rel=[]
+        for v_e in voted_emotion:
+            count+=1
+            if count>2:
+                break
+            rel.append(v_e)
+        if len(voted_emotion)>2:
+            rel.append(random.choice(voted_emotion[2:]))
+        lst = [r['label'].capitalize() for r in rel]
         shuffle(lst)
         js['emotion'] = lst
     if len(intention)>=3:
-        intention = intention[:3]
-        lst = [r['label'] for r in intention]
+        count=0
+        rel=[]
+        for v_i in voted_intention:
+            count+=1
+            if count>2:
+                break
+            rel.append(v_i)
+        if len(voted_intention)>2:
+            rel.append(random.choice(voted_intention[2:]))
+        lst = [r['label'].capitalize() for r in rel]
         shuffle(lst)
         js['intention'] = lst
     return HttpResponse(json.dumps(js), content_type="application/json")

@@ -9,9 +9,8 @@ class ActivityFth extends Component {
         super(props);
         this.state = {
             similar: {},
-            user_similar: {},
             verified: [],
-            verfied_user: [],
+            json: {},
             redirect: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,9 +20,9 @@ class ActivityFth extends Component {
         fetch(HOST_URL+'/fetchSimilarVideos?index='+this.props.sentNumber+"&activity=1")
             .then(res => res.json())
             .then((response) => this.setState({
-                similar: response['sent2vec'],
-                user_similar: response['user'],
-            }))
+                similar: response['similar'],
+                json: response['json'],
+            }),console.log(this.state.similar))
     }
 
     handleSubmit() {
@@ -37,9 +36,8 @@ class ActivityFth extends Component {
                     },
                     body: JSON.stringify({
                         similar_expressions: this.state.verified,
-                        similar_expressions_user: this.state.verfied_user,
                         original_expressions: this.state.similar,
-                        original_expressions_user: this.state.user_similar,
+                        js: this.state.json,
                     })
                 }
             )
@@ -70,24 +68,12 @@ class ActivityFth extends Component {
                             <Checkbox key={idx} 
                                 className="checkbox-expression"
                                 label={this.state.similar[val]} 
-                                value={val} 
+                                value={this.state.similar[val]} 
                                 onChange={(e,value) => 
                                     value['checked'] ?
                                     this.state.verified.push(value['value'])
                                     :
                                     this.state.verified.splice(this.state.verified.indexOf(value['value']),1)
-                                }/>
-                        )}
-                        {this.state.user_similar && Object.keys(this.state.user_similar).map((val,idx) => 
-                            <Checkbox key={idx} 
-                                className="checkbox-expression"
-                                label={this.state.user_similar[val]} 
-                                value={val} 
-                                onChange={(e,value) => 
-                                    value['checked'] ?
-                                    this.state.verfied_user.push(value['value'])
-                                    :
-                                    this.state.verified_user.splice(this.state.verified.indexOf(value['value']),1)
                                 }/>
                         )}
                         {/* <Input fluid placeholder="Write the expression here." onChange={(e,value) => this.setState({suggestion: value['value']})}/> */}
